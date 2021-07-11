@@ -14,6 +14,7 @@
         "prettier": "prettier --write **/*.{json,yml,yaml,md,php,js,ts,tsx}",
         "lint-staged": "lint-staged",
         "prepare": "is-ci || husky install",
+        "eslint": "eslint .",
         "build:client": "npm run build npm run build -w packages/client"
     },
     "lint-staged": {
@@ -22,6 +23,9 @@
         ]
     },
     "devDependencies": {
+        "@prettier/plugin-php": "0.17.2",
+        "eslint-config-prettier": "8.3.0",
+        "eslint-plugin-prettier": "3.4.0",
         "husky": "7.0.1",
         "is-ci": "3.0.0",
         "lint-staged": "11.0.0",
