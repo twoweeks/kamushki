@@ -6,9 +6,26 @@
     "repository": {
         "type": "git",
         "url": "https://github.com/twoweeks/twg20-web.git",
-        "directory": "packages/client"
+        "directory": "packages/server"
     },
-    "scripts": {},
-    "dependencies": {},
-    "devDependencies": {}
+    "scripts": {
+        "cleanup": "del-cli ./dist",
+        "copy-static-dir": "node utils/copy-static-dir.js",
+        "build": "npm run cleanup && tsc && npm run copy-static-dir",
+        "start": "node dist/index.js"
+    },
+    "dependencies": {
+        "@koa/router": "10.0.0",
+        "cross-fetch": "3.1.4",
+        "fs-extra": "10.0.0",
+        "knex": "0.95.7",
+        "koa": "2.13.1",
+        "koa-send": "5.0.1"
+    },
+    "devDependencies": {
+        "@types/fs-extra": "^9.0.12",
+        "@types/koa": "2.13.4",
+        "@types/koa__router": "8.0.7",
+        "@types/koa-send": "4.1.3"
+    }
 }

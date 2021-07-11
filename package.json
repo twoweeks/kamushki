@@ -15,7 +15,10 @@
         "lint-staged": "lint-staged",
         "prepare": "is-ci || husky install",
         "eslint": "eslint .",
-        "build:client": "npm run build npm run build -w packages/client"
+        "build:all": "npm run build --workspaces",
+        "build:client": "npm run build -w packages/client",
+        "build:server": "npm run build -w packages/server",
+        "start:server": "npm start -w packages/server"
     },
     "lint-staged": {
         "*.{json,yml,yaml,md,php,js,ts,tsx}": [
@@ -23,11 +26,15 @@
         ]
     },
     "devDependencies": {
+        "@typescript-eslint/eslint-plugin": "4.28.2",
+        "@typescript-eslint/parser": "4.28.2",
+        "del-cli": "4.0.0",
         "eslint-config-prettier": "8.3.0",
         "eslint-plugin-prettier": "3.4.0",
         "husky": "7.0.1",
         "is-ci": "3.0.0",
         "lint-staged": "11.0.0",
-        "prettier": "2.3.2"
+        "prettier": "2.3.2",
+        "typescript": "4.3.5"
     }
 }
