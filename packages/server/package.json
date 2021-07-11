@@ -1,0 +1,14 @@
+{
+    "name": "@twoweeks/twg20-web-server",
+    "version": "1.0.0",
+    "type": "module",
+    "private": true,
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/twoweeks/twg20-web.git",
+        "directory": "packages/client"
+    },
+    "scripts": {},
+    "dependencies": {},
+    "devDependencies": {}
+}

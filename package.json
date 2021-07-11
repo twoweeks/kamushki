@@ -1,0 +1,30 @@
+{
+    "name": "@twoweeks/twg20-web",
+    "version": "1.0.0",
+    "type": "module",
+    "private": true,
+    "author": "Dmitry <dmitry@cojam.ru> (https://e965.ru)",
+    "license": "MIT",
+    "repository": "https://github.com/twoweeks/twg20-web.git",
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "test": "jest",
+        "prettier": "prettier --write **/*.{json,yml,yaml,md,php,js,ts,tsx}",
+        "lint-staged": "lint-staged",
+        "prepare": "is-ci || husky install",
+        "build:client": "npm run build npm run build -w packages/client"
+    },
+    "lint-staged": {
+        "*.{json,yml,yaml,md,php,js,ts,tsx}": [
+            "prettier --write"
+        ]
+    },
+    "devDependencies": {
+        "husky": "7.0.1",
+        "is-ci": "3.0.0",
+        "lint-staged": "11.0.0",
+        "prettier": "2.3.2"
+    }
+}
