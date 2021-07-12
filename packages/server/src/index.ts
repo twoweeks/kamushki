@@ -6,10 +6,13 @@ import { dirname, join } from 'path';
 
 import CONFIG from './config.js';
 
+import type { GameItemType } from './types';
+
 import getSendFormStatus from './utils/get-send-form-status.js';
 import { getIsAuth } from './utils/check-auth.js';
 
 import { getTwitchUsers } from './db/get-live-streams-users.js';
+import { getGames } from './db/games.js';
 
 import { getTwitchAuthTokenFlow, getTwitchLiveStreams } from './live-streams/twitch-api.js';
 import { writeTwitchStreamsListFile, getTwitchStreamsListFilePath } from './live-streams/twitch-api.js';
@@ -48,7 +51,7 @@ app.head('/api/check-auth', (req, res) => {
     res.status(ResStatus).end();
 });
 
-app.get('/api/live', (req, res) => {
+app.get('/api/get-live-streams', (req, res) => {
     res.set('Access-Control-Allow-Origin', '*');
     res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
 
@@ -102,7 +105,25 @@ app.get('/api/send-form-status', (req, res) => {
     res.set('Access-Control-Allow-Origin', '*');
     res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
 
-    res.json(getSendFormStatus(CONFIG.send_form_times)).end();
+    res.json(getSendFormStatus(CONFIG.send_form_times));
+});
+
+app.get('/api/get-games', async (req, res) => {
+    if (!getIsAuth(req.headers.cookie || '')) {
+        res.status(401).end();
+        return;
+    }
+
+    let games: GameItemType[] = [];
+
+    try {
+        games = await getGames(CONFIG.contest.number);
+    } catch (err) {
+        console.warn(err, '/', new Date().toISOString());
+        res.status(500).end();
+    }
+
+    res.json(games);
 });
 
 app.use((req, res) => {

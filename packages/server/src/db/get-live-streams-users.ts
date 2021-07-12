@@ -1,13 +1,11 @@
-import mongodb from 'mongodb';
-
-const { MongoClient } = mongodb;
+import { createMongoClient } from './common.js';
 
 const DB_NAME = 'live-streams';
 
 export const getTwitchUsers = async (): Promise<string[]> => {
     const COLLECTION_NAME = 'twitch-users';
 
-    const mongoClient = new MongoClient('mongodb://localhost:27017/', { useUnifiedTopology: true });
+    const mongoClient = createMongoClient();
 
     return new Promise((resolve, reject) => {
         mongoClient.connect((err, client) => {

@@ -9,3 +9,17 @@ export type SendFormTimesType = {
     open_before: number;
     open_after: number;
 };
+
+export type GameItemType = {
+    _id: string;
+    contest: number;
+    stage: SendFormStatusResponseType['stage'];
+    title: string;
+    email: string;
+    genre: string;
+    description: string;
+    tools: string;
+    archive: string;
+    screenshot: string;
+    date: string;
+};
