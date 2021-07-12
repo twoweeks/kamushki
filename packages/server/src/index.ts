@@ -7,6 +7,8 @@ import CONFIG from './config.js';
 
 import getSendFormStatus from './utils/get-send-form-status.js';
 
+import { getTwitchUsers } from './db/get-live-streams-users.js';
+
 import { getTwitchAuthTokenFlow, getTwitchLiveStreams } from './live-streams/twitch-api.js';
 import { writeTwitchStreamsListFile, getTwitchStreamsListFilePath } from './live-streams/twitch-api.js';
 
@@ -44,7 +46,7 @@ app.get('/live', (req, res) => {
             let users: string[] = [];
 
             try {
-                users = [];
+                users = await getTwitchUsers();
             } catch (err) {
                 console.warn(err, '/', new Date().toISOString());
             }
