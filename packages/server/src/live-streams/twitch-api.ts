@@ -5,9 +5,6 @@ import { writeFile, readFile } from 'fs/promises';
 import type { StreamItemType } from './types.js';
 import type { TwitchAuthResponseType, TwitchTokenFormatInFSType } from './twitch-api.types.js';
 
-import { readStaticFileStream } from '../utils/fs-utils.js';
-import { ReadStream } from 'fs';
-
 const TWITCH_TOKEN_FILE = 'twitch_token.json';
 const TWITCH_STREAMS_LIST_FILE = 'twitch_streams_list.json';
 
@@ -117,6 +114,6 @@ export const writeTwitchStreamsListFile = async (staticDir: string, streamsList:
     return writeFile(FilePath, JSON.stringify(streamsList), 'utf-8');
 };
 
-export const readTwitchStreamsListFileStream = (staticDir: string): ReadStream => {
-    return readStaticFileStream(staticDir, TWITCH_STREAMS_LIST_FILE);
+export const getTwitchStreamsListFilePath = (staticDir: string): string => {
+    return join(staticDir, TWITCH_STREAMS_LIST_FILE);
 };
