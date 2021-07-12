@@ -7,6 +7,7 @@ import { dirname, join } from 'path';
 import CONFIG from './config.js';
 
 import { readStaticFileStream } from './utils/fs-utils.js';
+import getSendFormStatus from './utils/get-send-form-status.js';
 
 import { getTwitchAuthTokenFlow, getTwitchLiveStreams } from './live-streams/twitch-api.js';
 import { writeTwitchStreamsListFile, readTwitchStreamsListFileStream } from './live-streams/twitch-api.js';
@@ -57,6 +58,7 @@ router.get('/live', async (ctx, next) => {
                 })
                 .catch(() => {
                     console.warn('Twitch API query failed', new Date().toISOString());
+                    writeTwitchStreamsListFile(staticPath, []);
                     clearInterval(timerID);
                 });
         };
@@ -65,9 +67,13 @@ router.get('/live', async (ctx, next) => {
 
         timerID = setInterval(() => {
             requestAndWriteData();
-        }, 5 * 1000);
+        }, 30 * 1000);
     }
 })();
+
+router.get('/send-form-status', async ctx => {
+    ctx.response.body = getSendFormStatus(CONFIG.send_form_times);
+});
 
 app.use(router.routes()).use(router.allowedMethods());
 
