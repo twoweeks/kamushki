@@ -8,6 +8,8 @@ import ReduxStore from './redux/store';
 
 import App from './Components/App/Components/AppContainer';
 
+import './main.scss';
+
 ReactDOM.render(
     <ReduxProvider store={ReduxStore}>
         <HashRouter>

@@ -1,10 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit';
 
-export const ReducerName = 'app';
+export const ReducerName = 'sendPage';
 
 const InnitialState = {};
 
-const AppSlice = createSlice({
+const SendPageSlice = createSlice({
     name: ReducerName,
     initialState: InnitialState,
     reducers: {},
@@ -13,4 +13,4 @@ const AppSlice = createSlice({
     },
 });
 
-export default AppSlice.reducer;
+export default SendPageSlice.reducer;
