@@ -1,4 +1,5 @@
 import { App as TinyHttpApp } from '@tinyhttp/app';
+import { cors } from '@tinyhttp/cors';
 import { json as jsonParser } from 'milliparsec';
 
 import { fileURLToPath } from 'url';
@@ -23,6 +24,7 @@ const staticPath = join(__dirname, 'static');
 
 const app = new TinyHttpApp();
 
+app.use(cors({ origin: '*' }));
 app.use(jsonParser());
 
 app.get('/robots.txt', (req, res) => {
@@ -32,6 +34,7 @@ app.get('/robots.txt', (req, res) => {
 app.post('/api/auth', (req, res) => {
     if (!req.body || !req.body.auth_key) {
         res.status(400).end();
+        return;
     }
 
     if (req.body.auth_key === CONFIG.auth_key) {
@@ -47,12 +50,11 @@ app.post('/api/auth', (req, res) => {
 });
 
 app.head('/api/check-auth', (req, res) => {
-    const ResStatus = getIsAuth(req.headers.cookie || '') ? 200 : 401;
+    const ResStatus = getIsAuth(req.headers.cookie) ? 200 : 401;
     res.status(ResStatus).end();
 });
 
 app.get('/api/get-live-streams', (req, res) => {
-    res.set('Access-Control-Allow-Origin', '*');
     res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
 
     res.sendFile(getTwitchStreamsListFilePath(staticPath));
@@ -101,15 +103,14 @@ app.get('/api/get-live-streams', (req, res) => {
     }
 })();
 
-app.get('/api/send-form-status', (req, res) => {
-    res.set('Access-Control-Allow-Origin', '*');
+app.get('/api/get-send-form-status', (req, res) => {
     res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
 
     res.json(getSendFormStatus(CONFIG.send_form_times));
 });
 
 app.get('/api/get-games', async (req, res) => {
-    if (!getIsAuth(req.headers.cookie || '')) {
+    if (!getIsAuth(req.headers.cookie)) {
         res.status(401).end();
         return;
     }
@@ -124,6 +125,40 @@ app.get('/api/get-games', async (req, res) => {
     }
 
     res.json(games);
+});
+
+app.put('/api/send-game', (req, res) => {
+    if (!req.body) {
+        res.status(400).end();
+        return;
+    }
+
+    const RequestBody: Partial<Omit<GameItemType, '_id'> & { captcha: string }> = req.body;
+
+    if (!RequestBody.title || !RequestBody.email || !RequestBody.archive || !RequestBody.screenshot) {
+        res.status(406).end();
+        return;
+    }
+
+    res.status(200).end();
+});
+
+app.patch('/api/edit-game-info', (req, res) => {
+    if (!getIsAuth(req.headers.cookie)) {
+        res.status(401).end();
+        return;
+    }
+
+    res.status(200).end();
+});
+
+app.delete('/api/delete-games', (req, res) => {
+    if (!getIsAuth(req.headers.cookie)) {
+        res.status(401).end();
+        return;
+    }
+
+    res.status(200).end();
 });
 
 app.use((req, res) => {
