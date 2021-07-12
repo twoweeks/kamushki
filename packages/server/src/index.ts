@@ -1,4 +1,5 @@
 import { App as TinyHttpApp } from '@tinyhttp/app';
+import { json as jsonParser } from 'milliparsec';
 
 import { fileURLToPath } from 'url';
 import { dirname, join } from 'path';
@@ -6,6 +7,7 @@ import { dirname, join } from 'path';
 import CONFIG from './config.js';
 
 import getSendFormStatus from './utils/get-send-form-status.js';
+import { getIsAuth } from './utils/check-auth.js';
 
 import { getTwitchUsers } from './db/get-live-streams-users.js';
 
@@ -14,19 +16,43 @@ import { writeTwitchStreamsListFile, getTwitchStreamsListFilePath } from './live
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+const staticPath = join(__dirname, 'static');
+
 const app = new TinyHttpApp();
 
-const staticPath = join(__dirname, 'static');
+app.use(jsonParser());
 
 app.get('/robots.txt', (req, res) => {
     res.sendFile(join(staticPath, 'robots.txt'));
 });
 
-app.get('/live', (req, res) => {
+app.post('/api/auth', (req, res) => {
+    if (!req.body || !req.body.auth_key) {
+        res.status(400).end();
+    }
+
+    if (req.body.auth_key === CONFIG.auth_key) {
+        res.cookie('auth_key', CONFIG.auth_key, {
+            expires: new Date(Date.now() + 604800000), // 1 week
+            httpOnly: true,
+            sameSite: true,
+        });
+        res.status(200).end();
+    } else {
+        res.status(401).end();
+    }
+});
+
+app.head('/api/check-auth', (req, res) => {
+    const ResStatus = getIsAuth(req.headers.cookie || '') ? 200 : 401;
+    res.status(ResStatus).end();
+});
+
+app.get('/api/live', (req, res) => {
     res.set('Access-Control-Allow-Origin', '*');
     res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
 
-    res.json(getTwitchStreamsListFilePath(staticPath));
+    res.sendFile(getTwitchStreamsListFilePath(staticPath));
 });
 
 (async () => {
@@ -72,7 +98,7 @@ app.get('/live', (req, res) => {
     }
 })();
 
-app.get('/send-form-status', (req, res) => {
+app.get('/api/send-form-status', (req, res) => {
     res.set('Access-Control-Allow-Origin', '*');
     res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
 
