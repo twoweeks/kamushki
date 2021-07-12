@@ -20,7 +20,7 @@ router.get('/robots.txt', async (ctx, next) => {
     await next();
 
     ctx.response.type = 'text/plain; charset=utf-8';
-    ctx.response.body = createReadStream(join(staticPath, ctx.path), 'utf-8');
+    ctx.response.body = createReadStream(join(staticPath, 'robots.txt'), 'utf-8');
 });
 
 app.use(router.routes()).use(router.allowedMethods());
