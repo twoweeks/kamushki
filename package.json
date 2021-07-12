@@ -18,6 +18,7 @@
         "build:all": "npm run build --workspaces",
         "build:client": "npm run build -w packages/client",
         "build:server": "npm run build -w packages/server",
+        "start:client": "npm start -w packages/client",
         "start:server": "npm start -w packages/server"
     },
     "lint-staged": {
