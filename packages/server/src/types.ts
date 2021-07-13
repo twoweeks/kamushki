@@ -1,6 +1,8 @@
+export type GameStageType = 'demo' | 'final';
+
 export type SendFormStatusResponseType = {
     status: 'open' | 'closed';
-    stage: 'demo' | 'final';
+    stage: GameStageType;
 };
 
 export type SendFormTimesType = {
@@ -13,7 +15,7 @@ export type SendFormTimesType = {
 export type GameItemType = {
     _id: string;
     contest: number;
-    stage: SendFormStatusResponseType['stage'];
+    stage: GameStageType;
     title: string;
     email: string;
     genre: string;
@@ -24,4 +26,4 @@ export type GameItemType = {
     date: string;
 };
 
-export type SendFormQueryParamsType = Partial<Omit<GameItemType, '_id' | 'contest' | 'stage' | 'date'> & { captcha: string }>;
+export type SendFormQueryParamsType = Omit<GameItemType, '_id' | 'contest' | 'stage' | 'date'> & { captcha: string };

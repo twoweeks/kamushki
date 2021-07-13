@@ -28,7 +28,6 @@ const Routes: FastifyPluginAsync = async (app, options) => {
         } else {
             res.status(401).send();
         }
-        res.status(200).send();
     });
 
     app.head('/check', async (req, res) => {
