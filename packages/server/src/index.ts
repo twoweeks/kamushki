@@ -32,6 +32,7 @@ app.use('/api/games', gamesSubApp);
 app.use('/api/twitch', twitchLiveStreamsSubApp);
 
 app.use((req, res) => {
+    res.status(404);
     res.sendFile(join(staticPath, '404.html'));
 });
 

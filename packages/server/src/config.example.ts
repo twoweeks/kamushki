@@ -1,23 +1,29 @@
+import type { SendFormTimesType } from './types.js';
+
 const TimeZone = '+03:00'; // Moscow/Europe
+
+const SendFormTimes: SendFormTimesType = {
+    // время окончания приёма демок
+    demo_end: new Date('2021-07-17' + 'T' + '00:00' + TimeZone),
+
+    // время окончания приёма финалок
+    final_end: new Date('2021-07-17' + 'T' + '00:00' + TimeZone),
+
+    // период (в секундах), в который будет открыта форма отправки игр, до времени окончания приёма
+    open_before: 2 * 24 * 60 * 60,
+
+    // период (в секундах), в который форма будет работать после окончания времени приёма
+    open_after: 2 * 60 * 60,
+};
 
 export default {
     contest: {
         number: 20,
     },
 
-    times: {
-        // время окончания приёма демок
-        demo_end: new Date('2021-07-17' + 'T' + '00:00' + TimeZone),
+    auth_key: '',
 
-        // время окончания приёма финалок
-        final_end: new Date('2021-07-14' + 'T' + '00:00' + TimeZone),
-
-        // период (в секундах), в который будет работать форма приёма игр до времени окончания
-        open_before: 2 * 24 * 60 * 60,
-
-        // период (в секундах), в который будет работать форма приёма игр после времени окончания
-        open_after: 2 * 60 * 60,
-    },
+    send_form_times: SendFormTimes,
 
     db: {
         hostname: '127.0.0.1',
@@ -27,7 +33,7 @@ export default {
     },
 
     API_KEYS: {
-        recaptcha: '',
+        recaptcha: '', // v2
         twitch: {
             client_id: '',
             client_secret: '',

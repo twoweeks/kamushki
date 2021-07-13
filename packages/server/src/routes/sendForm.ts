@@ -8,6 +8,11 @@ import getSendFormStatus from '../utils/get-send-form-status.js';
 
 const subApp = new SubApp();
 
+subApp.get('/get-status', (req, res) => {
+    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
+    res.json(getSendFormStatus(CONFIG.send_form_times));
+});
+
 subApp.put('/send-game', (req, res) => {
     if (!req.body) {
         res.status(400).end();
@@ -22,12 +27,6 @@ subApp.put('/send-game', (req, res) => {
     }
 
     res.status(200).end();
-});
-
-subApp.get('/get-status', (req, res) => {
-    res.set('Cache-Control', 'no-cache, no-store, must-revalidate');
-
-    res.json(getSendFormStatus(CONFIG.send_form_times));
 });
 
 export default subApp;
