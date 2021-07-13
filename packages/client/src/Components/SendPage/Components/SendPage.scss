@@ -1,3 +1,87 @@
 .sendPage {
-    //
+    padding: 10px;
+
+    &__form {
+        width: 100%;
+        max-width: 500px;
+
+        margin: 0 auto;
+
+        font-size: 20px;
+    }
+
+    &__input {
+        $i: &;
+
+        &:not(:first-child) {
+            margin-top: 20px;
+        }
+
+        & > * {
+            &:not(:first-child) {
+                margin-top: 10px;
+            }
+        }
+
+        &__label {
+            font-weight: 500;
+        }
+
+        &[data-required] {
+            #{$i}__label {
+                label {
+                    &::after {
+                        content: '*';
+                        margin-left: 0.1em;
+
+                        color: #d21010;
+                    }
+                }
+            }
+        }
+
+        &__input {
+            input:not([type='checkbox']),
+            textarea {
+                display: block;
+                width: 100%;
+
+                padding: 10px;
+            }
+
+            textarea {
+                resize: vertical;
+            }
+        }
+
+        &--checkbox {
+            display: flex;
+
+            align-items: center;
+            gap: 0.25em;
+
+            #{$i}__label {
+                margin-top: 0;
+
+                font-size: 0.8em;
+                font-weight: normal;
+            }
+        }
+
+        &__extraText {
+            font-size: 0.8em;
+        }
+    }
+
+    &__captchaInput {
+        margin-top: 10px;
+    }
+
+    &__submitButton {
+        margin-top: 10px;
+
+        button {
+            padding: 5px 10px;
+        }
+    }
 }
