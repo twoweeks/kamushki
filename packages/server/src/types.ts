@@ -24,4 +24,4 @@ export type GameItemType = {
     date: string;
 };
 
-export type SendFormQueryParamsType = Partial<Omit<GameItemType, '_id'> & { captcha: string }>;
+export type SendFormQueryParamsType = Partial<Omit<GameItemType, '_id' | 'contest' | 'date'> & { captcha: string }>;
