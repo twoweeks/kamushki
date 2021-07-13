@@ -23,3 +23,5 @@ export type GameItemType = {
     screenshot: string;
     date: string;
 };
+
+export type SendFormQueryParamsType = Partial<Omit<GameItemType, '_id'> & { captcha: string }>;
