@@ -4,7 +4,7 @@ import FastifyCookiePlugin from 'fastify-cookie';
 import FastifyStaticPlugin from 'fastify-static';
 import FastifySwaggerPlugin from 'fastify-swagger';
 
-import CONFIG from './config';
+import CONFIG from './config.js';
 
 import { StaticPath } from './common.js';
 
@@ -13,7 +13,7 @@ import sendFormRoutes from './routes/sendForm.js';
 import gamesRoutes from './routes/games.js';
 import twitchLiveStreamsRoutes from './routes/twitch-live-streams.js';
 
-import { createTwitchApiLoop } from './live-streams/twitch-api';
+import { createTwitchApiLoop } from './live-streams/twitch-api.js';
 
 const app = Fastify({});
 
@@ -51,6 +51,6 @@ app.setNotFoundHandler(async (req, res) => {
     res.sendFile('404.html');
 });
 
-app.listen(3001);
+await app.listen(3001);
 
-createTwitchApiLoop(StaticPath, CONFIG.API_KEYS.twitch.client_id, CONFIG.API_KEYS.twitch.client_secret);
+await createTwitchApiLoop(StaticPath, CONFIG.API_KEYS.twitch.client_id, CONFIG.API_KEYS.twitch.client_secret);
