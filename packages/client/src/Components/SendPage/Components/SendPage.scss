@@ -1,13 +1,17 @@
 .sendPage {
     padding: 10px;
 
+    font-size: 20px;
+
+    &__text {
+        text-align: center;
+    }
+
     &__form {
         width: 100%;
         max-width: 500px;
 
         margin: 0 auto;
-
-        font-size: 20px;
     }
 
     &__input {

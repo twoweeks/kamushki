@@ -4,6 +4,7 @@ import { ReCaptchaV2 as ReCaptcha, EReCaptchaV2Size } from 'react-recaptcha-x';
 import CONFIG from '../../../config';
 
 import type { SendFormQueryParamsType } from '../../../api/types/sendFormTypes';
+import type { SendPageStateType } from '../SendPageTypes';
 
 import TextInput from '../../common/TextInput';
 import CheckboxInput from '../../common/CheckboxInput';
@@ -11,11 +12,12 @@ import Link from '../../common/Link';
 
 import './SendPage.scss';
 
-type PropsType = {
+type PropsType = Pick<SendPageStateType, 'FormStatus' | 'IsFormStatusPending'> & {
     formDataHandler: (data: SendFormQueryParamsType) => void;
 };
 
 const SendPage: React.FC<PropsType> = props => {
+    const { FormStatus, IsFormStatusPending } = props;
     const { formDataHandler } = props;
 
     const [ReCaptchaToken, setReCaptchaToken] = useState<string>('');
@@ -63,6 +65,30 @@ const SendPage: React.FC<PropsType> = props => {
 
         // formDataHandler(SendFormData);
     }, []);
+
+    if (IsFormStatusPending) {
+        return (
+            <div className="sendPage">
+                <div className="sendPage__text">загрузка...</div>
+            </div>
+        );
+    }
+
+    if (FormStatus === 'closed') {
+        return (
+            <div className="sendPage">
+                <div className="sendPage__text">Форма закрыта</div>
+            </div>
+        );
+    }
+
+    if (!FormStatus) {
+        return (
+            <div className="sendPage">
+                <div className="sendPage__text">Не удалось соединиться с сервером</div>
+            </div>
+        );
+    }
 
     return (
         <div className="sendPage">

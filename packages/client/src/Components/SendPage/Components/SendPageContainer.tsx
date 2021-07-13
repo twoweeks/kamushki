@@ -27,7 +27,7 @@ const SendPageContainer: React.FC = () => {
 
     return (
         <ReCaptchaProvider siteKeyV2={CONFIG.API_KEYS.recaptcha}>
-            <SendPage {...{ formDataHandler }} />
+            <SendPage {...{ FormStatus, IsFormStatusPending }} {...{ formDataHandler }} />
         </ReCaptchaProvider>
     );
 };
