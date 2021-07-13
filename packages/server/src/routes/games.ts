@@ -28,22 +28,6 @@ subApp.get('/get-games', async (req, res) => {
     res.json(games);
 });
 
-subApp.put('/send-game', (req, res) => {
-    if (!req.body) {
-        res.status(400).end();
-        return;
-    }
-
-    const RequestBody: Partial<Omit<GameItemType, '_id'> & { captcha: string }> = req.body;
-
-    if (!RequestBody.title || !RequestBody.email || !RequestBody.archive || !RequestBody.screenshot) {
-        res.status(406).end();
-        return;
-    }
-
-    res.status(200).end();
-});
-
 subApp.patch('/edit-game-info', (req, res) => {
     if (!getIsAuth(req.headers.cookie)) {
         res.status(401).end();
