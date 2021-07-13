@@ -5,8 +5,10 @@ import { writeFile, readFile } from 'fs/promises';
 import type { StreamItemType } from './types.js';
 import type { TwitchAuthResponseType, TwitchTokenFormatInFSType } from './twitch-api.types.js';
 
-const TWITCH_TOKEN_FILE = 'twitch_token.json';
-const TWITCH_STREAMS_LIST_FILE = 'twitch_streams_list.json';
+import { getTwitchUsers } from '../db/get-live-streams-users.js';
+
+export const TWITCH_TOKEN_FILE = 'twitch_token.json';
+export const TWITCH_STREAMS_LIST_FILE = 'twitch_streams_list.json';
 
 export const getTwitchAuthToken = async (clientID: string, clientSecret: string): Promise<TwitchAuthResponseType> => {
     const TwitchApiAuthURL = 'https://id.twitch.tv/oauth2/token';
@@ -114,6 +116,46 @@ export const writeTwitchStreamsListFile = async (staticDir: string, streamsList:
     return writeFile(FilePath, JSON.stringify(streamsList), 'utf-8');
 };
 
-export const getTwitchStreamsListFilePath = (staticDir: string): string => {
-    return join(staticDir, TWITCH_STREAMS_LIST_FILE);
+export const createTwitchApiLoop = async (staticPath: string, clientID: string, clientSecret: string): Promise<void> => {
+    let token = '';
+
+    try {
+        token = await getTwitchAuthTokenFlow(staticPath, clientID, clientSecret);
+    } catch (err) {
+        console.warn(err, '/', new Date().toISOString());
+        return;
+    }
+
+    if (token !== '') {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let timerID: any = -1;
+
+        const requestAndWriteData = async () => {
+            let users: string[] = [];
+
+            try {
+                users = await getTwitchUsers();
+            } catch (err) {
+                console.warn(err, '/', new Date().toISOString());
+            }
+
+            if (users.length === 0) return [];
+
+            return getTwitchLiveStreams(users, clientID, token)
+                .then(data => {
+                    writeTwitchStreamsListFile(staticPath, data);
+                })
+                .catch(() => {
+                    console.warn('Twitch API query failed', new Date().toISOString());
+                    writeTwitchStreamsListFile(staticPath, []);
+                    clearInterval(timerID);
+                });
+        };
+
+        requestAndWriteData();
+
+        timerID = setInterval(() => {
+            requestAndWriteData();
+        }, 30 * 1000);
+    }
 };

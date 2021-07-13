@@ -45,7 +45,8 @@ const SendPage: React.FC<PropsType> = props => {
             'captcha',
         ];
 
-        Object(SendFormData).keys((key: keyof SendFormQueryParamsType) => {
+        Object.keys(SendFormData).forEach(_key => {
+            const key = _key as keyof SendFormQueryParamsType;
             if (!NeededFields.includes(key)) {
                 delete SendFormData[key];
             }
@@ -63,7 +64,7 @@ const SendPage: React.FC<PropsType> = props => {
 
         console.log(SendFormData);
 
-        // formDataHandler(SendFormData);
+        formDataHandler(SendFormData);
     }, []);
 
     if (IsFormStatusPending) {
@@ -192,7 +193,7 @@ const SendPage: React.FC<PropsType> = props => {
                         }}
                     />
 
-                    {/* <input type="text" id="captcha" name="captcha" value={ReCaptchaToken} readOnly hidden /> */}
+                    <input type="text" id="captcha" name="captcha" value={ReCaptchaToken} readOnly hidden />
                 </div>
 
                 <div className="sendPage__submitButton">

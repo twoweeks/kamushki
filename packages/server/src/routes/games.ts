@@ -1,4 +1,4 @@
-import { App as SubApp } from '@tinyhttp/app';
+import type { FastifyPluginAsync } from 'fastify';
 
 import CONFIG from '../config.js';
 
@@ -8,42 +8,42 @@ import { getIsAuth } from '../utils/check-auth.js';
 
 import { getGames } from '../db/games.js';
 
-const subApp = new SubApp();
+const Routes: FastifyPluginAsync = async (app, options) => {
+    app.get('/get-games', async (req, res) => {
+        if (!getIsAuth(req.cookies)) {
+            res.status(401).send();
+            return;
+        }
 
-subApp.get('/get-games', async (req, res) => {
-    if (!getIsAuth(req.headers.cookie)) {
-        res.status(401).end();
-        return;
-    }
+        let games: GameItemType[] = [];
 
-    let games: GameItemType[] = [];
+        try {
+            games = await getGames(CONFIG.contest.number);
+        } catch (err) {
+            console.warn(err, '/', new Date().toISOString());
+            res.status(500).send();
+        }
 
-    try {
-        games = await getGames(CONFIG.contest.number);
-    } catch (err) {
-        console.warn(err, '/', new Date().toISOString());
-        res.status(500).end();
-    }
+        res.send(games);
+    });
 
-    res.json(games);
-});
+    app.patch('/edit-game-info', (req, res) => {
+        if (!getIsAuth(req.cookies)) {
+            res.status(401).send();
+            return;
+        }
 
-subApp.patch('/edit-game-info', (req, res) => {
-    if (!getIsAuth(req.headers.cookie)) {
-        res.status(401).end();
-        return;
-    }
+        res.status(200).send();
+    });
 
-    res.status(200).end();
-});
+    app.delete('/delete-games', (req, res) => {
+        if (!getIsAuth(req.cookies)) {
+            res.status(401).send();
+            return;
+        }
 
-subApp.delete('/delete-games', (req, res) => {
-    if (!getIsAuth(req.headers.cookie)) {
-        res.status(401).end();
-        return;
-    }
+        res.status(200).send();
+    });
+};
 
-    res.status(200).end();
-});
-
-export default subApp;
+export default Routes;

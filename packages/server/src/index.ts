@@ -1,39 +1,56 @@
-import { App as TinyHttpApp } from '@tinyhttp/app';
-import { cors } from '@tinyhttp/cors';
-import { json as jsonParser } from 'milliparsec';
+import Fastify from 'fastify';
+import FastifyCorsPlugin from 'fastify-cors';
+import FastifyCookiePlugin from 'fastify-cookie';
+import FastifyStaticPlugin from 'fastify-static';
+import FastifySwaggerPlugin from 'fastify-swagger';
 
-import { fileURLToPath } from 'url';
-import { dirname, join } from 'path';
+import CONFIG from './config';
 
-import authSubApp from './routes/auth.js';
-import sendFormSubApp from './routes/sendForm.js';
-import gamesSubApp from './routes/games.js';
-import twitchLiveStreamsSubApp from './routes/twitch-live-streams.js';
+import { StaticPath } from './common.js';
 
-const __dirname = dirname(fileURLToPath(import.meta.url));
+import authRoutes from './routes/auth.js';
+import sendFormRoutes from './routes/sendForm.js';
+import gamesRoutes from './routes/games.js';
+import twitchLiveStreamsRoutes from './routes/twitch-live-streams.js';
 
-const staticPath = join(__dirname, 'static');
+import { createTwitchApiLoop } from './live-streams/twitch-api';
 
-const app = new TinyHttpApp();
+const app = Fastify({});
 
-app.use(cors({ origin: '*' }));
-app.use(jsonParser());
+app.register(FastifyCorsPlugin);
+app.register(FastifyCookiePlugin);
 
-app.get('/robots.txt', (req, res) => {
-    res.sendFile(join(staticPath, 'robots.txt'));
+app.register(FastifySwaggerPlugin, {
+    routePrefix: '/apidocs',
+    swagger: {
+        info: {
+            title: 'TWG App API',
+            version: '1.0.0',
+        },
+    },
+    staticCSP: true,
+    exposeRoute: true,
 });
 
-app.use('/api/auth', authSubApp);
+app.register(FastifyStaticPlugin, { root: StaticPath });
 
-app.use('/api/send-form', sendFormSubApp);
+app.get('/robots.txt', async (req, res) => {
+    res.sendFile('robots.txt');
+});
 
-app.use('/api/games', gamesSubApp);
+app.register(authRoutes, { prefix: '/api/auth' });
 
-app.use('/api/twitch', twitchLiveStreamsSubApp);
+app.register(sendFormRoutes, { prefix: '/api/send-form' });
 
-app.use((req, res) => {
+app.register(gamesRoutes, { prefix: '/api/games' });
+
+app.register(twitchLiveStreamsRoutes, { prefix: '/api/twitch' });
+
+app.setNotFoundHandler(async (req, res) => {
     res.status(404);
-    res.sendFile(join(staticPath, '404.html'));
+    res.sendFile('404.html');
 });
 
 app.listen(3001);
+
+createTwitchApiLoop(StaticPath, CONFIG.API_KEYS.twitch.client_id, CONFIG.API_KEYS.twitch.client_secret);
