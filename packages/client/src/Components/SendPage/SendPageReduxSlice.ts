@@ -1,4 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
+import type { PayloadAction } from '@reduxjs/toolkit';
 
 import { SendPageStateType } from './SendPageTypes';
 
@@ -13,21 +14,24 @@ export const getStatusThunk = createAsyncThunk(`${ReducerName}/getStatus`, async
 });
 
 export const sendGameThunk = createAsyncThunk(`${ReducerName}/sendGame`, async (params: Parameters<typeof sendGame>[0]) => {
-    const response = await sendGame(params);
-    return response.status;
+    return await sendGame(params);
 });
 
 const InitialState: SendPageStateType = {
     FormStatus: null,
     IsFormStatusPending: false,
-    SendedGameStatus: -1,
+    SendedGameStatus: 'not_sent',
     IsSendGamePending: false,
 };
 
 const SendPageSlice = createSlice({
     name: ReducerName,
     initialState: InitialState,
-    reducers: {},
+    reducers: {
+        resetSendedGameStatus: (state, action: PayloadAction<void>) => {
+            state.SendedGameStatus = InitialState.SendedGameStatus;
+        },
+    },
     extraReducers: builder => {
         builder.addCase(getStatusThunk.pending, (state, action) => {
             state.IsFormStatusPending = true;
@@ -45,14 +49,18 @@ const SendPageSlice = createSlice({
             state.IsSendGamePending = true;
         });
         builder.addCase(sendGameThunk.fulfilled, (state, action) => {
-            state.SendedGameStatus = action.payload;
+            state.SendedGameStatus = action.payload.status;
             state.IsSendGamePending = false;
         });
         builder.addCase(sendGameThunk.rejected, (state, action) => {
-            console.warn(action.error);
+            // TODO: обработка для wrong_data
+            state.SendedGameStatus = 'unknown';
             state.IsSendGamePending = false;
+            console.warn(action.error);
         });
     },
 });
+
+export const { resetSendedGameStatus } = SendPageSlice.actions;
 
 export default SendPageSlice.reducer;

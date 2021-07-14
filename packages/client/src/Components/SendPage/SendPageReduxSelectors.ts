@@ -16,3 +16,13 @@ export const getIsFormStatusPending = createSelector<
     state => state.sendPage.IsFormStatusPending,
     IsFormStatusPending => IsFormStatusPending
 );
+
+export const getSendedGameStatus = createSelector<RootStateType, SendPageStateType['SendedGameStatus'], SendPageStateType['SendedGameStatus']>(
+    state => state.sendPage.SendedGameStatus,
+    SendedGameStatus => SendedGameStatus
+);
+
+export const getIsSendGamePending = createSelector<RootStateType, SendPageStateType['IsSendGamePending'], SendPageStateType['IsSendGamePending']>(
+    state => state.sendPage.IsSendGamePending,
+    IsSendGamePending => IsSendGamePending
+);

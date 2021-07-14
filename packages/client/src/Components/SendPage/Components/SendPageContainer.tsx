@@ -7,13 +7,15 @@ import CONFIG from '../../../config';
 
 import { getStatusThunk, sendGameThunk } from '../SendPageReduxSlice';
 
-import { getFormStatus, getIsFormStatusPending } from '../SendPageReduxSelectors';
+import { getFormStatus, getIsFormStatusPending, getSendedGameStatus } from '../SendPageReduxSelectors';
 
 import SendPage from './SendPage';
+import StatusModal from './StatusModal/StatusModalContainer';
 
 const SendPageContainer: React.FC = () => {
     const FormStatus = useSelector(getFormStatus);
     const IsFormStatusPending = useSelector(getIsFormStatusPending);
+    const SendedGameStatus = useSelector(getSendedGameStatus);
 
     const dispatch = useDispatch();
 
@@ -28,6 +30,7 @@ const SendPageContainer: React.FC = () => {
     return (
         <ReCaptchaProvider siteKeyV2={CONFIG.API_KEYS.recaptcha}>
             <SendPage {...{ FormStatus, IsFormStatusPending }} {...{ formDataHandler }} />
+            {SendedGameStatus !== 'not_sent' ? <StatusModal /> : null}
         </ReCaptchaProvider>
     );
 };

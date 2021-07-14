@@ -1,8 +1,10 @@
-import { SendFormStatusResponseType } from '../../api/types/sendFormTypes';
+import { SendFormStatusResponseType, SendFormResponseType } from '../../api/types/sendFormTypes';
+
+export type SendedGameStatusType = SendFormResponseType['status'] | 'not_sent' | 'wrong_data' | 'unknown';
 
 export type SendPageStateType = {
     FormStatus: SendFormStatusResponseType['status'] | null;
     IsFormStatusPending: boolean;
-    SendedGameStatus: number;
+    SendedGameStatus: SendedGameStatusType;
     IsSendGamePending: boolean;
 };

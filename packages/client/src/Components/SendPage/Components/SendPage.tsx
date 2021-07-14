@@ -25,7 +25,7 @@ const SendPage: React.FC<PropsType> = props => {
     const formSubmitHandler = useCallback((event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        const SendFormData: SendFormQueryParamsType & { ready?: 'on' | 'off' } = Object.fromEntries(new FormData(event.target as HTMLFormElement));
+        const SendFormData = Object.fromEntries(new FormData(event.target as HTMLFormElement)) as SendFormQueryParamsType & { ready?: 'on' | 'off' };
 
         if (!SendFormData.ready || SendFormData.ready !== 'on') {
             alert('Не прочтён регламент конкурса');
@@ -183,7 +183,6 @@ const SendPage: React.FC<PropsType> = props => {
                 <div className="sendPage__captchaInput">
                     <ReCaptcha
                         size={EReCaptchaV2Size.Normal}
-                        id="captcha"
                         callback={token => {
                             if (typeof token === 'string') {
                                 setReCaptchaToken(token);
