@@ -2,14 +2,13 @@ import type { FastifyPluginAsync, FastifySchema } from 'fastify';
 
 import CONFIG from '../config.js';
 
-import type { SendFormQueryParamsType } from '../types.js';
+import type { SendFormQueryParamsType, SendFormResponseType } from '../types.js';
 
+// import getSendFormStatus from '../utils/get-send-form-status.js';
 import getGameStage from '../utils/get-game-stage.js';
 import verifyCaptcha from '../utils/verify-captcha.js';
 
 import { addGame } from '../db/games.js';
-
-// import getSendFormStatus from '../utils/get-send-form-status.js';
 
 const Routes: FastifyPluginAsync = async (app, options) => {
     app.get('/get-status', async (req, res) => {
@@ -39,10 +38,24 @@ const Routes: FastifyPluginAsync = async (app, options) => {
     app.put('/send-game', { schema: SendGameSchema }, async (req, res) => {
         const RequestBody = req.body as SendFormQueryParamsType;
 
+        const GameStage = getGameStage(CONFIG.send_form_times);
+
+        const ResponseBody: SendFormResponseType = {
+            status: 'success',
+        };
+
+        if (!GameStage) {
+            ResponseBody.status = 'form_closed';
+            res.status(200).send(ResponseBody);
+            return;
+        }
+
         const IsCaptchaValid = await verifyCaptcha(CONFIG.API_KEYS.recaptcha, RequestBody.captcha);
 
         if (!IsCaptchaValid) {
-            res.status(401).send();
+            ResponseBody.status = 'wrong_captcha';
+            res.status(200).send(ResponseBody);
+            return;
         }
 
         if (RequestBody) {
@@ -55,11 +68,11 @@ const Routes: FastifyPluginAsync = async (app, options) => {
             await addGame({
                 ...GameData,
                 contest: CONFIG.contest.number,
-                stage: getGameStage(CONFIG.send_form_times) ?? 'demo',
+                stage: GameStage ?? 'demo',
                 date: new Date().toISOString(),
             });
 
-            res.status(200).send();
+            res.status(200).send(ResponseBody);
         }
     });
 };
