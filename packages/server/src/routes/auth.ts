@@ -22,6 +22,7 @@ const Routes: FastifyPluginAsync = async (app, options) => {
             res.cookie('auth_key', CONFIG.auth_key, {
                 expires: new Date(Date.now() + 604800000), // 1 week
                 httpOnly: true,
+                path: '/',
                 sameSite: true,
             });
             res.status(200).send();
