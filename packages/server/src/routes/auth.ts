@@ -16,9 +16,9 @@ const Routes: FastifyPluginAsync = async (app, options) => {
     };
 
     app.post('/login', { schema: LoginSchema }, async (req, res) => {
-        const requestBody = req.body as { auth_key?: typeof CONFIG.auth_key };
+        const RequestBody = req.body as { auth_key?: typeof CONFIG.auth_key };
 
-        if (requestBody && requestBody.auth_key === CONFIG.auth_key) {
+        if (RequestBody && RequestBody.auth_key === CONFIG.auth_key) {
             res.cookie('auth_key', CONFIG.auth_key, {
                 expires: new Date(Date.now() + 604800000), // 1 week
                 httpOnly: true,
