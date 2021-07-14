@@ -25,11 +25,15 @@ export default {
 
     send_form_times: SendFormTimes,
 
-    db: {
-        hostname: '127.0.0.1',
-        name: '',
-        username: '',
-        password: '',
+    server: {
+        port: 3001,
+
+        db: {
+            hostname: '127.0.0.1',
+            name: '',
+            username: '',
+            password: '',
+        },
     },
 
     API_KEYS: {
