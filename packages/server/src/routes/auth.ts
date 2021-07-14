@@ -5,7 +5,7 @@ import CONFIG from '../config.js';
 import { getIsAuth } from '../utils/check-auth.js';
 
 const Routes: FastifyPluginAsync = async (app, options) => {
-    const LoginScheme: FastifySchema = {
+    const LoginSchema: FastifySchema = {
         body: {
             type: 'object',
             required: ['auth_key'],
@@ -15,7 +15,7 @@ const Routes: FastifyPluginAsync = async (app, options) => {
         },
     };
 
-    app.post('/login', { schema: LoginScheme }, async (req, res) => {
+    app.post('/login', { schema: LoginSchema }, async (req, res) => {
         const requestBody = req.body as { auth_key?: typeof CONFIG.auth_key };
 
         if (requestBody && requestBody.auth_key === CONFIG.auth_key) {
