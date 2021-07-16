@@ -7,7 +7,7 @@ import type { AdminGamesPageStateType } from './GamesPageTypes';
 
 export const ReducerName = 'adminGamesPage';
 
-const { getContests, getGames } = GamesAPI;
+const { getContests, getGames, deleteGames } = GamesAPI;
 
 export const getContestsThunk = createAsyncThunk(`${ReducerName}/getContests`, async () => {
     return await getContests();
@@ -15,6 +15,11 @@ export const getContestsThunk = createAsyncThunk(`${ReducerName}/getContests`, a
 
 export const getGamesThunk = createAsyncThunk(`${ReducerName}/getGames`, async (params: Parameters<typeof getGames>[0]) => {
     return await getGames(params);
+});
+
+export const deleteGamesThunk = createAsyncThunk(`${ReducerName}/deleteGames`, async (params: Parameters<typeof deleteGames>[0]) => {
+    const response = await deleteGames(params);
+    return response.status;
 });
 
 const InnitialState: AdminGamesPageStateType = {
@@ -35,6 +40,10 @@ const AdminGamesPage = createSlice({
     reducers: {
         setStageFIlter: (state, action: PayloadAction<AdminGamesPageStateType['Filters']['Stage']>) => {
             state.Filters.Stage = action.payload;
+        },
+
+        deleteGamesFromData: (state, action: PayloadAction<string[]>) => {
+            state.Data.GamesData = state.Data.GamesData.filter(GameInfo => !action.payload.includes(GameInfo._id));
         },
 
         resetData: (state, action: PayloadAction<void>) => {
@@ -66,9 +75,19 @@ const AdminGamesPage = createSlice({
             console.warn(action.error);
             state.Data.IsGamesDataPending = false;
         });
+
+        builder.addCase(deleteGamesThunk.pending, (state, action) => {
+            //
+        });
+        builder.addCase(deleteGamesThunk.fulfilled, (state, action) => {
+            //
+        });
+        builder.addCase(deleteGamesThunk.rejected, (state, action) => {
+            console.warn(action.error);
+        });
     },
 });
 
-export const { setStageFIlter, resetData } = AdminGamesPage.actions;
+export const { setStageFIlter, deleteGamesFromData, resetData } = AdminGamesPage.actions;
 
 export default AdminGamesPage.reducer;

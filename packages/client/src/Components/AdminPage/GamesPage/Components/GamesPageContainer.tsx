@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { getContestsThunk, getGamesThunk } from '../GamesPageReduxSlice';
-import { resetData, setStageFIlter } from '../GamesPageReduxSlice';
+import { getContestsThunk, getGamesThunk, deleteGamesThunk } from '../GamesPageReduxSlice';
+import { deleteGamesFromData, setStageFIlter, resetData } from '../GamesPageReduxSlice';
 
 import { getContestsData, getFiltredGamesData, getStageFilterValue } from '../GamesPageReduxSelectors';
 import { getGamesCount, getIsDataPending } from '../GamesPageReduxSelectors';
@@ -48,11 +48,20 @@ const GamesPageContainer: React.FC = () => {
         dispatch(setStageFIlter(stage));
     }, []);
 
+    const handleDeleteGamesButtonClick = useCallback((gameIDs: string[]) => {
+        const IsConfirmed = confirm('Вы уверены?');
+        if (IsConfirmed) {
+            dispatch(deleteGamesThunk({ games: gameIDs }));
+            dispatch(deleteGamesFromData(gameIDs));
+        }
+    }, []);
+
     return (
         <GamesPage
             {...{ ContestsData, GamesData, IsDataPending, GamesCount }}
             {...{ SelectedContest, handleSelectedContestChange }}
             {...{ StageFilterValue, handleGamesStageFilterChange }}
+            {...{ handleDeleteGamesButtonClick }}
         />
     );
 };

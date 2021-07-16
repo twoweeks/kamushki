@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useState, useCallback } from 'react';
 
 import type { AdminGamesPageStateType, GamesCountObjectType } from '../GamesPageTypes';
 
@@ -13,12 +13,33 @@ type PropsType = Pick<AdminGamesPageStateType['Data'], 'ContestsData' | 'GamesDa
     StageFilterValue: AdminGamesPageStateType['Filters']['Stage'];
     handleSelectedContestChange: (consestNum: number) => void;
     handleGamesStageFilterChange: (stage: AdminGamesPageStateType['Filters']['Stage']) => void;
+    handleDeleteGamesButtonClick: (gamesID: string[]) => void;
 };
 
 const GamesPage: React.FC<PropsType> = props => {
     const { GamesData, ContestsData, IsDataPending, GamesCount } = props;
     const { SelectedContest, handleSelectedContestChange } = props;
     const { StageFilterValue, handleGamesStageFilterChange } = props;
+    const { handleDeleteGamesButtonClick } = props;
+
+    const [RemovableGamesList, setRemovableGamesList] = useState<string[]>([]);
+
+    const hadleGameCheckboxClick = useCallback(
+        (gameID: string) => {
+            let removableGamesListCopy = [...RemovableGamesList];
+
+            if (removableGamesListCopy.includes(gameID)) {
+                removableGamesListCopy = removableGamesListCopy.filter(GameID => GameID !== gameID);
+            } else {
+                removableGamesListCopy.push(gameID);
+            }
+
+            setRemovableGamesList(removableGamesListCopy);
+        },
+        [handleDeleteGamesButtonClick, RemovableGamesList]
+    );
+
+    console.log(RemovableGamesList);
 
     const parseLink = useCallback((linkText: string) => {
         let text = <></>;
@@ -76,7 +97,9 @@ const GamesPage: React.FC<PropsType> = props => {
                     </select>
                 </form>
                 <form onSubmit={commonFormSubmitHandler}>
-                    <button style={{ padding: '2.5px 5px' }}>Массовое удаление игр</button>
+                    <button style={{ padding: '2.5px 5px' }} onClick={() => handleDeleteGamesButtonClick(RemovableGamesList)}>
+                        Массовое удаление игр{RemovableGamesList.length !== 0 ? ` (${RemovableGamesList.length})` : ''}
+                    </button>
                 </form>
             </div>
             <table className="adminGamesPage__table">
@@ -98,7 +121,7 @@ const GamesPage: React.FC<PropsType> = props => {
                     {GamesData.map(GameInfo => (
                         <tr key={GameInfo._id}>
                             <td>
-                                <input type="checkbox" />
+                                <input type="checkbox" onChange={() => hadleGameCheckboxClick(GameInfo._id)} />
                             </td>
                             <td>{GameInfo.title}</td>
                             <td>{GameInfo.email}</td>
@@ -109,7 +132,7 @@ const GamesPage: React.FC<PropsType> = props => {
                             <td>{parseLink(GameInfo.screenshot)}</td>
                             <td>{parseLink(GameInfo.archive)}</td>
                             <td>
-                                <button>🗑️</button>
+                                <button onClick={() => handleDeleteGamesButtonClick([GameInfo._id])}>🗑️</button>
                                 <button>✍️</button>
                             </td>
                         </tr>
