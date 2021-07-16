@@ -10,8 +10,8 @@ export const GamesAPI = {
         return await API.get(`${Controller}/get-contests`).json();
     },
 
-    getGames: async (params: GamesQueryParamsType): Promise<GamesQueryResponseType> => {
-        return await API.put(`${Controller}/getGames`, { searchParams: params }).json();
+    getGames: async (params?: GamesQueryParamsType): Promise<GamesQueryResponseType> => {
+        return await API.get(`${Controller}/get-games`, { searchParams: params }).json();
     },
 };
 

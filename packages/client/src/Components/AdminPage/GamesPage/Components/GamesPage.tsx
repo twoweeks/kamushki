@@ -1,9 +1,128 @@
-import React from 'react';
+import React, { useCallback } from 'react';
+
+import type { AdminGamesPageStateType, GamesCountObjectType } from '../GamesPageTypes';
+
+import Link from '../../../common/Link';
 
 import './GamesPage.scss';
 
-const GamesPage: React.FC = props => {
-    return <></>;
+type PropsType = Pick<AdminGamesPageStateType['Data'], 'ContestsData' | 'GamesData'> & {
+    GamesCount: GamesCountObjectType;
+    SelectedContest: number;
+    StageFilterValue: AdminGamesPageStateType['Filters']['Stage'];
+    handleSelectedContestChange: (consestNum: number) => void;
+    handleGamesStageFilterChange: (stage: AdminGamesPageStateType['Filters']['Stage']) => void;
+};
+
+const GamesPage: React.FC<PropsType> = props => {
+    const { GamesData, ContestsData, GamesCount } = props;
+    const { SelectedContest, handleSelectedContestChange } = props;
+    const { StageFilterValue, handleGamesStageFilterChange } = props;
+
+    const parseLink = useCallback((linkText: string) => {
+        let text = <></>;
+
+        try {
+            const LinkURL = new URL(linkText);
+
+            text = (
+                <>
+                    <Link href={linkText}>ссылка</Link> ({LinkURL.hostname})
+                </>
+            );
+        } catch (e) {
+            text = (
+                <span style={{ color: 'red' }} title={linkText}>
+                    !!! wrong !!!
+                </span>
+            );
+        }
+
+        return text;
+    }, []);
+
+    const commonFormSubmitHandler = useCallback((event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+    }, []);
+
+    return (
+        <div className="adminGamesPage">
+            <div className="adminGamesPage__filters">
+                <form onSubmit={commonFormSubmitHandler}>
+                    <label htmlFor="contest_filter">№ конкурса</label>
+                    <select
+                        style={{ marginLeft: '.25em' }}
+                        id="contest_filter"
+                        value={SelectedContest}
+                        onChange={event => handleSelectedContestChange(Number(event.target.value))}>
+                        {ContestsData.map(contestNum => (
+                            <option key={contestNum} value={contestNum}>
+                                {contestNum}
+                            </option>
+                        ))}
+                    </select>
+                </form>
+                <form onSubmit={commonFormSubmitHandler}>
+                    <label htmlFor="stage_filter">Показать</label>
+                    <select
+                        style={{ marginLeft: '.25em' }}
+                        id="stage_filter"
+                        value={StageFilterValue}
+                        onChange={event => handleGamesStageFilterChange(event.target.value as typeof StageFilterValue)}>
+                        <option value="all">все игры ({GamesCount.all})</option>
+                        <option value="demo">только демоверсии ({GamesCount.demo})</option>
+                        <option value="final">только финальные версии ({GamesCount.final})</option>
+                    </select>
+                </form>
+                <form onSubmit={commonFormSubmitHandler}>
+                    <button style={{ padding: '2.5px 5px' }}>Массовое удаление игр</button>
+                </form>
+            </div>
+            <table className="adminGamesPage__table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Название</th>
+                        <th>Почта автора</th>
+                        <th>Стадия</th>
+                        <th>Дата</th>
+                        <th>Описание</th>
+                        <th>Инструменты</th>
+                        <th>Cкриншот/логотип</th>
+                        <th>Архив</th>
+                        <th>Опции</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {GamesData.map(GameInfo => (
+                        <tr key={GameInfo._id}>
+                            <td>
+                                <input type="checkbox" />
+                            </td>
+                            <td>{GameInfo.title}</td>
+                            <td>{GameInfo.email}</td>
+                            <td>{GameInfo.stage}</td>
+                            <td>{GameInfo.date}</td>
+                            <td>{GameInfo.description ?? '—'}</td>
+                            <td>{GameInfo.genre ?? '—'}</td>
+                            <td>{parseLink(GameInfo.screenshot)}</td>
+                            <td>{parseLink(GameInfo.archive)}</td>
+                            <td>
+                                <button>🗑️</button>
+                                <button>✍️</button>
+                            </td>
+                        </tr>
+                    ))}
+
+                    {GamesData.length === 0 ? (
+                        <tr>
+                            <td colSpan={10}>Игр нет :(</td>
+                        </tr>
+                    ) : null}
+                </tbody>
+            </table>
+        </div>
+    );
 };
 
 export default GamesPage;

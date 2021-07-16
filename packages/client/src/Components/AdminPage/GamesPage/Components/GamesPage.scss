@@ -1,0 +1,33 @@
+.adminGamesPage {
+    padding: 10px;
+
+    &__filters {
+        form {
+            &:not(:first-child) {
+                margin-top: 10px;
+            }
+        }
+    }
+
+    &__table {
+        width: 100%;
+
+        margin-top: 10px;
+
+        border-collapse: collapse;
+
+        thead {
+            white-space: nowrap;
+        }
+
+        th,
+        td {
+            border: 1px solid #000;
+            padding: 5px;
+        }
+
+        tbody {
+            text-align: center;
+        }
+    }
+}
