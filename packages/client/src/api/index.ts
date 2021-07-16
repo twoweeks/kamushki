@@ -1,9 +1,7 @@
 import ky from 'ky';
 
-import CONFIG from '../config';
-
 export const API = ky.create({
-    prefixUrl: `${CONFIG.api_host}/api`,
+    prefixUrl: '/api',
     retry: { limit: 0 },
     hooks: {
         afterResponse: [

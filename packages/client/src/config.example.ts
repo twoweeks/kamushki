@@ -1,6 +1,4 @@
 export default {
-    api_host: '',
-
     links: {
         rules: '',
     },
