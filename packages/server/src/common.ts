@@ -4,3 +4,5 @@ import { dirname, join } from 'path';
 export const __dirname = dirname(fileURLToPath(import.meta.url));
 
 export const StaticPath = join(__dirname, 'static');
+
+export const ClientPath = join(__dirname, 'client-files');

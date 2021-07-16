@@ -7,7 +7,7 @@ import FastifySwaggerPlugin from 'fastify-swagger';
 
 import CONFIG from './config.js';
 
-import { StaticPath } from './common.js';
+import { StaticPath, ClientPath } from './common.js';
 import { getIsAuth } from './utils/check-auth.js';
 
 import authRoutes from './routes/auth.js';
@@ -26,8 +26,9 @@ app.register(FastifyHelmetPlugin, {
         directives: {
             defaultSrc: [`'self'`],
             frameAncestors: [`'self' ${CONFIG.contest.site}`],
+            childSrc: [`'self' https://www.google.com`],
             styleSrc: [`'self' 'unsafe-inline'`],
-            scriptSrc: [`'self' 'unsafe-inline'`],
+            scriptSrc: [`'self' 'unsafe-inline' https://www.google.com https://www.gstatic.com`],
         },
     },
 });
@@ -60,6 +61,12 @@ app.register(FastifySwaggerPlugin, {
 });
 
 app.register(FastifyStaticPlugin, { root: StaticPath });
+
+app.register(FastifyStaticPlugin, {
+    root: ClientPath,
+    prefix: '/client/',
+    decorateReply: false,
+});
 
 app.get('/robots.txt', { schema: { hide: true } }, async (req, res) => {
     res.sendFile('robots.txt');
