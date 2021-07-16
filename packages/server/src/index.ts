@@ -7,6 +7,7 @@ import FastifySwaggerPlugin from 'fastify-swagger';
 import CONFIG from './config.js';
 
 import { StaticPath } from './common.js';
+import { getIsAuth } from './utils/check-auth.js';
 
 import authRoutes from './routes/auth.js';
 import sendFormRoutes from './routes/sendForm.js';
@@ -20,8 +21,21 @@ const app = Fastify({});
 app.register(FastifyCorsPlugin);
 app.register(FastifyCookiePlugin);
 
+// Swagger
+
+const DocsPath = '/apidocs';
+
+app.addHook('onRequest', (req, res, next) => {
+    if (req.routerPath.startsWith(DocsPath) && !getIsAuth(req.cookies)) {
+        res.status(401).send();
+        return;
+    }
+
+    next();
+});
+
 app.register(FastifySwaggerPlugin, {
-    routePrefix: '/apidocs',
+    routePrefix: DocsPath,
     swagger: {
         info: {
             title: 'TWG App API',
@@ -34,9 +48,11 @@ app.register(FastifySwaggerPlugin, {
 
 app.register(FastifyStaticPlugin, { root: StaticPath });
 
-app.get('/robots.txt', async (req, res) => {
+app.get('/robots.txt', { schema: { hide: true } }, async (req, res) => {
     res.sendFile('robots.txt');
 });
+
+// Routes
 
 app.register(authRoutes, { prefix: '/api/auth' });
 
