@@ -1,11 +1,11 @@
 import React from 'react';
 import { Routes, Route, NavLink } from 'react-router-dom';
 
-import * as ROUTES from '../../../App/routes';
+import * as ROUTES from '../App/routes';
 
-import './Wrapper.scss';
+import './AdminPage.scss';
 
-const Wrapper: React.FC = () => {
+const AdminPage: React.FC = () => {
     return (
         <div className="adminPage">
             <header className="adminPage__header">
@@ -21,6 +21,7 @@ const Wrapper: React.FC = () => {
                     </ul>
                 </nav>
             </header>
+
             <main className="adminPage__content">
                 <Routes>
                     <Route path={ROUTES.ADMIN_PAGE_GAMES_ROUTE} />
@@ -32,4 +33,4 @@ const Wrapper: React.FC = () => {
     );
 };
 
-export default Wrapper;
+export default AdminPage;

@@ -5,7 +5,7 @@ import * as ROUTES from '../routes';
 
 const SendPage = React.lazy(() => import('../../SendPage/Components/SendPageContainer'));
 const AdminLogin = React.lazy(() => import('../../AdminLogin/Components/AdminLoginContainer'));
-const AdminPageWrapper = React.lazy(() => import('../../AdminPage/Wrapper/Components/WrapperContainer'));
+const AdminPage = React.lazy(() => import('../../AdminPage/AdminPage'));
 
 const App: React.FC = () => {
     return (
@@ -36,7 +36,7 @@ const App: React.FC = () => {
                 path={`${ROUTES.ADMIN_PAGE_ROUTE}/*`}
                 element={
                     <React.Suspense fallback="Загрузка...">
-                        <AdminPageWrapper />
+                        <AdminPage />
                     </React.Suspense>
                 }
             />
