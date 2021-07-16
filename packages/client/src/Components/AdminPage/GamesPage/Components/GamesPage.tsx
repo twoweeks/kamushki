@@ -15,7 +15,7 @@ type PropsType = Pick<AdminGamesPageStateType['Data'], 'ContestsData' | 'GamesDa
 };
 
 const GamesPage: React.FC<PropsType> = props => {
-    const { GamesData, ContestsData, GamesCount } = props;
+    const { GamesData, ContestsData, IsDataPending, GamesCount } = props;
     const { SelectedContest, handleSelectedContestChange } = props;
     const { StageFilterValue, handleGamesStageFilterChange } = props;
 
@@ -114,7 +114,13 @@ const GamesPage: React.FC<PropsType> = props => {
                         </tr>
                     ))}
 
-                    {GamesData.length === 0 ? (
+                    {IsDataPending ? (
+                        <tr>
+                            <td colSpan={10}>загрузка...</td>
+                        </tr>
+                    ) : null}
+
+                    {!IsDataPending && GamesData.length === 0 ? (
                         <tr>
                             <td colSpan={10}>Игр нет :(</td>
                         </tr>

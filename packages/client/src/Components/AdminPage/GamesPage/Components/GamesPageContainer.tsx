@@ -5,13 +5,14 @@ import { getContestsThunk, getGamesThunk } from '../GamesPageReduxSlice';
 import { resetData, setStageFIlter } from '../GamesPageReduxSlice';
 
 import { getContestsData, getFiltredGamesData, getStageFilterValue } from '../GamesPageReduxSelectors';
-import { getGamesCount } from '../GamesPageReduxSelectors';
+import { getGamesCount, getIsDataPending } from '../GamesPageReduxSelectors';
 
 import GamesPage from './GamesPage';
 
 const GamesPageContainer: React.FC = () => {
     const ContestsData = useSelector(getContestsData);
     const GamesData = useSelector(getFiltredGamesData);
+    const IsDataPending = useSelector(getIsDataPending);
     const GamesCount = useSelector(getGamesCount);
     const StageFilterValue = useSelector(getStageFilterValue);
 
@@ -49,7 +50,7 @@ const GamesPageContainer: React.FC = () => {
 
     return (
         <GamesPage
-            {...{ ContestsData, GamesData, GamesCount }}
+            {...{ ContestsData, GamesData, IsDataPending, GamesCount }}
             {...{ SelectedContest, handleSelectedContestChange }}
             {...{ StageFilterValue, handleGamesStageFilterChange }}
         />
