@@ -33,3 +33,8 @@ export type SendedGameStatusType = 'success' | 'form_closed' | 'wrong_captcha';
 export type SendFormResponseType = {
     status: SendedGameStatusType;
 };
+
+export type LoginQueryParamsType = {
+    auth_key: string;
+    captcha: string;
+};
