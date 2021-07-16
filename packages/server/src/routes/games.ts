@@ -2,7 +2,8 @@ import type { FastifyPluginAsync, FastifySchema } from 'fastify';
 
 import CONFIG from '../config.js';
 
-import type { GameItemType } from '../types.js';
+import type { ContestsQueryResponseType } from '../types.js';
+import type { GamesQueryParamsType, GameItemType } from '../types.js';
 
 import { getIsAuth } from '../utils/check-auth.js';
 
@@ -19,7 +20,7 @@ const Routes: FastifyPluginAsync = async (app, options) => {
     });
 
     app.get('/get-contests', async (req, res) => {
-        let contests: number[] = [];
+        let contests: ContestsQueryResponseType = [];
 
         try {
             contests = await getContests();
@@ -41,7 +42,7 @@ const Routes: FastifyPluginAsync = async (app, options) => {
     };
 
     app.get('/get-games', { schema: GetGamesSchema }, async (req, res) => {
-        const { contest: QueryContestNumber } = req.query as { contest?: number };
+        const { contest: QueryContestNumber } = req.query as GamesQueryParamsType;
 
         let games: GameItemType[] = [];
 

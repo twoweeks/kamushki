@@ -38,3 +38,11 @@ export type LoginQueryParamsType = {
     auth_key: string;
     captcha: string;
 };
+
+export type ContestsQueryResponseType = number[];
+
+export type GamesQueryParamsType = {
+    contest?: number;
+};
+
+export type GamesQueryResponseType = GameItemType[];
