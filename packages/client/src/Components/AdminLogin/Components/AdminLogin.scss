@@ -1,0 +1,51 @@
+.adminLogin {
+    width: 100%;
+    max-width: 400px;
+
+    margin: 0 auto;
+    padding: 10px;
+
+    font-size: 20px;
+    text-align: center;
+
+    &__form {
+        margin-top: 10px;
+        padding: 10px 10px;
+
+        border: 1px solid #000;
+    }
+
+    &__input {
+        &__input {
+            input {
+                width: 100%;
+
+                padding: 10px;
+            }
+        }
+    }
+
+    &__captchaInput {
+        width: max-content;
+
+        margin: 15px auto 0;
+
+        div {
+            width: max-content;
+        }
+    }
+
+    &__submitButton {
+        margin-top: 15px;
+
+        button {
+            padding: 5px 10px;
+        }
+    }
+
+    &__error {
+        margin-top: 15px;
+
+        color: red;
+    }
+}
