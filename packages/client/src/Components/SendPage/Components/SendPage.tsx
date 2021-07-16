@@ -184,11 +184,7 @@ const SendPage: React.FC<PropsType> = props => {
                     <ReCaptcha
                         size={EReCaptchaV2Size.Normal}
                         callback={token => {
-                            if (typeof token === 'string') {
-                                setReCaptchaToken(token);
-                            } else {
-                                setReCaptchaToken('');
-                            }
+                            setReCaptchaToken(typeof token === 'string' ? token : '');
                         }}
                     />
 
