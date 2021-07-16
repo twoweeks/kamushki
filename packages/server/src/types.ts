@@ -46,3 +46,7 @@ export type GamesQueryParamsType = {
 };
 
 export type GamesQueryResponseType = GameItemType[];
+
+export type DeleteGamesQueryParamsType = {
+    games: string[];
+};

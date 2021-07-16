@@ -4,10 +4,11 @@ import CONFIG from '../config.js';
 
 import type { ContestsQueryResponseType } from '../types.js';
 import type { GamesQueryParamsType, GameItemType } from '../types.js';
+import type { DeleteGamesQueryParamsType } from '../types.js';
 
 import { getIsAuth } from '../utils/check-auth.js';
 
-import { getContests, getGames } from '../db/games.js';
+import { getContests, getGames, deleteGames } from '../db/games.js';
 
 const Routes: FastifyPluginAsync = async (app, options) => {
     app.addHook('onRequest', (req, res, next) => {
@@ -56,11 +57,33 @@ const Routes: FastifyPluginAsync = async (app, options) => {
         res.send(games);
     });
 
-    app.patch('/edit-game-info', (req, res) => {
+    app.patch('/edit-game-info', async (req, res) => {
         res.status(200).send();
     });
 
-    app.delete('/delete-games', (req, res) => {
+    const DeleteGamesSchema: FastifySchema = {
+        querystring: {
+            type: 'object',
+            properties: {
+                games: {
+                    type: 'array',
+                    contains: { type: 'string' },
+                    minItems: 1,
+                },
+            },
+        },
+    };
+
+    app.delete('/delete-games', { schema: DeleteGamesSchema }, async (req, res) => {
+        const { games: QueryGamesIDs } = req.body as DeleteGamesQueryParamsType;
+
+        try {
+            await deleteGames(QueryGamesIDs);
+        } catch (err) {
+            console.warn(err, '/', new Date().toISOString());
+            res.status(500).send();
+        }
+
         res.status(200).send();
     });
 };
