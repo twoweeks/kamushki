@@ -7,6 +7,7 @@ import Link from '../../../common/Link';
 import './GamesPage.scss';
 
 type PropsType = Pick<AdminGamesPageStateType['Data'], 'ContestsData' | 'GamesData'> & {
+    IsDataPending: boolean;
     GamesCount: GamesCountObjectType;
     SelectedContest: number;
     StageFilterValue: AdminGamesPageStateType['Filters']['Stage'];
