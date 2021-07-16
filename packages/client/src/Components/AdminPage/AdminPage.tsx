@@ -1,5 +1,8 @@
 import React from 'react';
+import { compose } from '@reduxjs/toolkit';
 import { Routes, Route, NavLink } from 'react-router-dom';
+
+import withAuthRedirect from '../../HOC/withAuthRedirect';
 
 import * as ROUTES from '../App/routes';
 
@@ -33,4 +36,4 @@ const AdminPage: React.FC = () => {
     );
 };
 
-export default AdminPage;
+export default compose<typeof AdminPage>(withAuthRedirect)(AdminPage);
