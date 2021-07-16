@@ -44,7 +44,7 @@ export const readTwitchTokenFile = async (staticDir: string): Promise<string> =>
     return readFile(FilePath, 'utf-8').then(data => {
         const JsonData = JSON.parse(data) as TwitchTokenFormatInFSType;
 
-        if (JsonData.expires_date > new Date().getTime()) {
+        if (new Date().getTime() > JsonData.expires_date) {
             throw 'Token expires';
         }
 
@@ -57,7 +57,8 @@ export const getTwitchAuthTokenFlow = async (staticDir: string, clientID: string
 
     try {
         token = await readTwitchTokenFile(staticDir);
-    } catch (e) {
+    } catch (err) {
+        console.warn(err);
         console.warn('Twitch token not found in the file system, trying to get', '/', new Date().toISOString());
     }
 
@@ -67,7 +68,8 @@ export const getTwitchAuthTokenFlow = async (staticDir: string, clientID: string
 
     try {
         twitchAuthResponse = await getTwitchAuthToken(clientID, clientSecret);
-    } catch (e) {
+    } catch (err) {
+        console.warn(err);
         console.warn('Failed to get twitch token, please check cridentials', '/', new Date().toISOString());
     }
 
