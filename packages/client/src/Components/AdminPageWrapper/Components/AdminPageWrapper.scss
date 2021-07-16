@@ -1,0 +1,44 @@
+.adminPage {
+    &__header {
+        display: flex;
+
+        padding: 10px;
+
+        align-items: center;
+
+        text-align: center;
+
+        &__navigaton {
+            height: fit-content;
+
+            margin-left: 20px;
+
+            ul {
+                li {
+                    list-style: none;
+
+                    display: inline-block;
+
+                    &:not(:first-child) {
+                        margin-left: 0.5em;
+                    }
+                }
+            }
+
+            a {
+                display: block;
+
+                text-decoration: none;
+                color: blue;
+
+                &[aria-current] {
+                    font-weight: bold;
+                }
+            }
+        }
+    }
+
+    &__content {
+        grid-area: content;
+    }
+}

@@ -6,6 +6,8 @@ import { Navigate } from 'react-router-dom';
 
 import CONFIG from '../../../config';
 
+import { ADMIN_PAGE_DEFAULT_ROUTE } from '../../App/routes';
+
 import { loginThunk, checkAuthThunk } from '../AdminLoginReduxSlice';
 import { resetLoginError } from '../AdminLoginReduxSlice';
 
@@ -35,7 +37,7 @@ const AdminLoginContainer: React.FC = () => {
 
     if (!IsAuthCheckComplete) return null;
 
-    if (IsAuth) return <Navigate to="/admin" />;
+    if (IsAuth) return <Navigate to={ADMIN_PAGE_DEFAULT_ROUTE} />;
 
     return (
         <ReCaptchaProvider siteKeyV2={CONFIG.API_KEYS.recaptcha}>

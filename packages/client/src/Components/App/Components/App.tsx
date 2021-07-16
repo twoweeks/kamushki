@@ -1,34 +1,45 @@
 import React from 'react';
-import { Routes, Route, Navigate, useLocation } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
+
+import * as ROUTES from '../routes';
 
 const SendPage = React.lazy(() => import('../../SendPage/Components/SendPageContainer'));
 const AdminLogin = React.lazy(() => import('../../AdminLogin/Components/AdminLoginContainer'));
-const AdminPage = React.lazy(() => import('../../AdminPage/Components/AdminPageContainer'));
+const AdminPageWrapper = React.lazy(() => import('../../AdminPageWrapper/Components/AdminPageWrapperContainer'));
 
 const App: React.FC = () => {
-    const { pathname: LocationPathname } = useLocation();
-
-    if (!['send', 'admin', 'adminlogin'].includes(LocationPathname.substr(1))) {
-        return <Navigate to="/send" />;
-    }
-
     return (
         <Routes>
-            <Route path="/send">
-                <React.Suspense fallback="Загрузка...">
-                    <SendPage />
-                </React.Suspense>
+            <Route
+                path={ROUTES.SEND_PAGE_ROUTE}
+                element={
+                    <React.Suspense fallback="Загрузка...">
+                        <SendPage />
+                    </React.Suspense>
+                }
+            />
+
+            <Route
+                path={ROUTES.ADMIN_LOGIN_ROUTE}
+                element={
+                    <React.Suspense fallback="Загрузка...">
+                        <AdminLogin />
+                    </React.Suspense>
+                }
+            />
+
+            <Route path={ROUTES.ADMIN_PAGE_ROUTE}>
+                <Navigate to={ROUTES.ADMIN_PAGE_DEFAULT_ROUTE} />
             </Route>
-            <Route path="/adminlogin">
-                <React.Suspense fallback="Загрузка...">
-                    <AdminLogin />
-                </React.Suspense>
-            </Route>
-            <Route path="/admin">
-                <React.Suspense fallback="Загрузка...">
-                    <AdminPage />
-                </React.Suspense>
-            </Route>
+
+            <Route
+                path={`${ROUTES.ADMIN_PAGE_ROUTE}/*`}
+                element={
+                    <React.Suspense fallback="Загрузка...">
+                        <AdminPageWrapper />
+                    </React.Suspense>
+                }
+            />
         </Routes>
     );
 };
