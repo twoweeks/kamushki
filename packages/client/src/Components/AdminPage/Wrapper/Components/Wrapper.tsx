@@ -1,11 +1,11 @@
 import React from 'react';
 import { Routes, Route, NavLink } from 'react-router-dom';
 
-import * as ROUTES from '../../App/routes';
+import * as ROUTES from '../../../App/routes';
 
-import './AdminPageWrapper.scss';
+import './Wrapper.scss';
 
-const AdminPageWrapper: React.FC = () => {
+const Wrapper: React.FC = () => {
     return (
         <div className="adminPage">
             <header className="adminPage__header">
@@ -32,4 +32,4 @@ const AdminPageWrapper: React.FC = () => {
     );
 };
 
-export default AdminPageWrapper;
+export default Wrapper;

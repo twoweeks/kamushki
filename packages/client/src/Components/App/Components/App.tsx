@@ -5,7 +5,7 @@ import * as ROUTES from '../routes';
 
 const SendPage = React.lazy(() => import('../../SendPage/Components/SendPageContainer'));
 const AdminLogin = React.lazy(() => import('../../AdminLogin/Components/AdminLoginContainer'));
-const AdminPageWrapper = React.lazy(() => import('../../AdminPageWrapper/Components/AdminPageWrapperContainer'));
+const AdminPageWrapper = React.lazy(() => import('../../AdminPage/Wrapper/Components/WrapperContainer'));
 
 const App: React.FC = () => {
     return (
