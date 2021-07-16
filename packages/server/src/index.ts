@@ -1,5 +1,6 @@
 import Fastify from 'fastify';
 import FastifyCorsPlugin from 'fastify-cors';
+import FastifyHelmetPlugin from 'fastify-helmet';
 import FastifyCookiePlugin from 'fastify-cookie';
 import FastifyStaticPlugin from 'fastify-static';
 import FastifySwaggerPlugin from 'fastify-swagger';
@@ -19,6 +20,18 @@ import { createTwitchApiLoop } from './live-streams/twitch-api.js';
 const app = Fastify({});
 
 app.register(FastifyCorsPlugin);
+
+app.register(FastifyHelmetPlugin, {
+    contentSecurityPolicy: {
+        directives: {
+            defaultSrc: [`'self'`],
+            frameAncestors: [`'self' ${CONFIG.contest.site}`],
+            styleSrc: [`'self' 'unsafe-inline'`],
+            scriptSrc: [`'self' 'unsafe-inline'`],
+        },
+    },
+});
+
 app.register(FastifyCookiePlugin);
 
 // Swagger

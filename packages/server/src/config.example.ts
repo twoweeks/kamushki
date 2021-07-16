@@ -19,6 +19,7 @@ const SendFormTimes: SendFormTimesType = {
 export default {
     contest: {
         number: 20,
+        site: 'https://20.twg.host',
     },
 
     auth_key: '',
