@@ -39,8 +39,6 @@ const GamesPage: React.FC<PropsType> = props => {
         [handleDeleteGamesButtonClick, RemovableGamesList]
     );
 
-    console.log(RemovableGamesList);
-
     const parseLink = useCallback((linkText: string) => {
         let text = <></>;
 

@@ -62,8 +62,6 @@ const SendPage: React.FC<PropsType> = props => {
             return;
         }
 
-        console.log(SendFormData);
-
         formDataHandler(SendFormData);
     }, []);
 
