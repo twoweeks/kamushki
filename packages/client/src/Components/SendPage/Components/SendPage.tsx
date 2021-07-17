@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useRef, useCallback } from 'react';
 import { ReCaptchaV2 as ReCaptcha, EReCaptchaV2Size } from 'react-recaptcha-x';
 
 import CONFIG from '../../../config';
@@ -65,36 +65,39 @@ const SendPage: React.FC<PropsType> = props => {
         formDataHandler(SendFormData);
     }, []);
 
+    const BaseClassName = useRef('sendPage');
+    const BaseInputClassName = useRef(`${BaseClassName.current}__input`);
+
     if (IsFormStatusPending) {
         return (
-            <div className="sendPage">
-                <div className="sendPage__text">загрузка...</div>
+            <div className={BaseClassName.current}>
+                <div className={`${BaseClassName.current}__text`}>загрузка...</div>
             </div>
         );
     }
 
     if (FormStatus === 'closed') {
         return (
-            <div className="sendPage">
-                <div className="sendPage__text">Форма закрыта</div>
+            <div className={BaseClassName.current}>
+                <div className={`${BaseClassName.current}__text`}>Форма закрыта</div>
             </div>
         );
     }
 
     if (!FormStatus) {
         return (
-            <div className="sendPage">
-                <div className="sendPage__text">Не удалось соединиться с сервером</div>
+            <div className={BaseClassName.current}>
+                <div className={`${BaseClassName.current}__text`}>Не удалось соединиться с сервером</div>
             </div>
         );
     }
 
     return (
-        <div className="sendPage">
-            <form className="sendPage__form" onSubmit={formSubmitHandler}>
+        <div className={BaseClassName.current}>
+            <form className={`${BaseClassName.current}__form`} onSubmit={formSubmitHandler}>
                 <TextInput
                     required
-                    className="sendPage__input"
+                    className={BaseInputClassName.current}
                     id="title"
                     type="text"
                     label="Название игры"
@@ -105,7 +108,7 @@ const SendPage: React.FC<PropsType> = props => {
 
                 <TextInput
                     required
-                    className="sendPage__input"
+                    className={BaseInputClassName.current}
                     id="email"
                     type="email"
                     label="Почта"
@@ -115,7 +118,7 @@ const SendPage: React.FC<PropsType> = props => {
                 />
 
                 <TextInput
-                    className="sendPage__input"
+                    className={BaseInputClassName.current}
                     id="description"
                     type="text"
                     label="Жанр"
@@ -125,7 +128,7 @@ const SendPage: React.FC<PropsType> = props => {
                 />
 
                 <TextInput
-                    className="sendPage__input"
+                    className={BaseInputClassName.current}
                     id="genre"
                     type="textarea"
                     label="Описание игры"
@@ -136,7 +139,7 @@ const SendPage: React.FC<PropsType> = props => {
                 />
 
                 <TextInput
-                    className="sendPage__input"
+                    className={BaseInputClassName.current}
                     id="tools"
                     type="textarea"
                     label="Инструменты"
@@ -147,7 +150,7 @@ const SendPage: React.FC<PropsType> = props => {
 
                 <TextInput
                     required
-                    className="sendPage__input"
+                    className={BaseInputClassName.current}
                     id="archive"
                     type="url"
                     label="Архив с игрой"
@@ -158,7 +161,7 @@ const SendPage: React.FC<PropsType> = props => {
 
                 <TextInput
                     required
-                    className="sendPage__input"
+                    className={BaseInputClassName.current}
                     id="screenshot"
                     type="url"
                     label="Скриншот/логотип игры"
@@ -169,7 +172,7 @@ const SendPage: React.FC<PropsType> = props => {
 
                 <CheckboxInput
                     required
-                    className="sendPage__input"
+                    className={BaseInputClassName.current}
                     id="ready"
                     label={
                         <>
@@ -178,7 +181,7 @@ const SendPage: React.FC<PropsType> = props => {
                     }
                 />
 
-                <div className="sendPage__captchaInput">
+                <div className={`${BaseClassName.current}__captchaInput`}>
                     <ReCaptcha
                         size={EReCaptchaV2Size.Normal}
                         callback={token => {
@@ -189,7 +192,7 @@ const SendPage: React.FC<PropsType> = props => {
                     <input type="text" id="captcha" name="captcha" value={ReCaptchaToken} readOnly hidden />
                 </div>
 
-                <div className="sendPage__submitButton">
+                <div className={`${BaseClassName.current}__submitButton`}>
                     <button type="submit" disabled={ReCaptchaToken === ''}>
                         Отправить игру
                     </button>
