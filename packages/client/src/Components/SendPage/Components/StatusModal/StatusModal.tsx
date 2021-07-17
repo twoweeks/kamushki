@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 
 import { SendPageStateType } from '../../SendPageTypes';
 
@@ -12,15 +12,18 @@ const StatusModal: React.FC<PropsType> = props => {
     const { SendedGameStatus } = props;
     const { handleModalClose } = props;
 
+    const BaseClassName = useRef('sendPage__statusModal');
+    const BaseButtonClassName = useRef(`${BaseClassName.current}__button`);
+
     return (
-        <div className="sendPage__statusModal__modal">
+        <div className={`modal__content ${BaseClassName.current}`}>
             {SendedGameStatus === 'success' ? (
                 <>
                     <p>
                         <strong>Игра успешно отправлена</strong>
                     </p>
                     <p>Ура! 🤗</p>
-                    <div className="sendPage__statusModal__modal__button">
+                    <div className={BaseButtonClassName.current}>
                         <button onClick={handleModalClose}>скрыть</button>
                     </div>
                 </>
@@ -32,7 +35,7 @@ const StatusModal: React.FC<PropsType> = props => {
                         <strong>Капча не пройдена</strong>
                     </p>
                     <p>Печаль! 😟</p>
-                    <div className="sendPage__statusModal__modal__button">
+                    <div className={BaseButtonClassName.current}>
                         <button onClick={handleModalClose}>попробовать снова</button>
                     </div>
                 </>
@@ -44,7 +47,7 @@ const StatusModal: React.FC<PropsType> = props => {
                         <strong>Неправильные данные</strong>
                     </p>
                     <p>Если вы считаете, что всё заполнено верно, то напишите на почту организатору</p>
-                    <div className="sendPage__statusModal__modal__button">
+                    <div className={BaseButtonClassName.current}>
                         <button onClick={handleModalClose}>или попробуйте снова</button>
                     </div>
                 </>
@@ -56,7 +59,7 @@ const StatusModal: React.FC<PropsType> = props => {
                         <strong>Форма закрыта</strong>
                     </p>
                     <p>Напишите на почту организатору</p>
-                    <div className="sendPage__statusModal__modal__button">
+                    <div className={BaseButtonClassName.current}>
                         <button onClick={handleModalClose}>скрыть</button>
                     </div>
                 </>
@@ -68,7 +71,7 @@ const StatusModal: React.FC<PropsType> = props => {
                         <strong>Неизвестная ошибка</strong>
                     </p>
                     <p>Если вы считаете, что всё заполнено верно, то напишите на почту организатору</p>
-                    <div className="sendPage__statusModal__modal__button">
+                    <div className={BaseButtonClassName.current}>
                         <button onClick={handleModalClose}>или попробуйте снова</button>
                     </div>
                 </>

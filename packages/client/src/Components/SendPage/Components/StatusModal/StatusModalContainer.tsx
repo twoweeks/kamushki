@@ -20,13 +20,17 @@ const StatusModalContainer: React.FC = () => {
     useEffect(() => {
         NodeRef.current = document.createElement('div');
 
-        NodeRef.current.classList.add('sendPage__statusModal__container');
+        NodeRef.current.classList.add('modal__root');
 
         document.body.appendChild(NodeRef.current);
+
+        document.body.dataset.modalView = '';
 
         setIsVisible(true);
 
         return () => {
+            delete document.body.dataset.modalView;
+
             if (NodeRef.current) {
                 NodeRef.current?.remove();
             }
