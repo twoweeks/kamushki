@@ -96,14 +96,9 @@ const Routes: FastifyPluginAsync = async (app, options) => {
 
     const DeleteGamesSchema: FastifySchema = {
         body: {
-            type: 'object',
-            properties: {
-                games: {
-                    type: 'array',
-                    contains: { type: 'string' },
-                    minItems: 1,
-                },
-            },
+            type: 'array',
+            contains: { type: 'string' },
+            minItems: 1,
         },
     };
 
