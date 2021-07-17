@@ -63,7 +63,7 @@ const SendPage: React.FC<PropsType> = props => {
     }, []);
 
     const BaseClassName = useRef('sendPage');
-    const BaseInputClassName = useRef(`${BaseClassName.current}__input`);
+    const BaseInputClassName = useRef(`${BaseClassName.current}__formItem`);
 
     if (IsFormStatusPending) {
         return (
@@ -96,7 +96,6 @@ const SendPage: React.FC<PropsType> = props => {
                     required
                     className={BaseInputClassName.current}
                     id="title"
-                    type="text"
                     label="Название игры"
                     placeholder="Ограбитель караванов 4"
                     extraText="Максимум 100 символов"
@@ -117,7 +116,6 @@ const SendPage: React.FC<PropsType> = props => {
                 <TextInput
                     className={BaseInputClassName.current}
                     id="description"
-                    type="text"
                     label="Жанр"
                     placeholder="Адвенчура"
                     extraText="Максимум 50 символов"
@@ -185,9 +183,9 @@ const SendPage: React.FC<PropsType> = props => {
                             setReCaptchaToken(typeof token === 'string' ? token : '');
                         }}
                     />
-
-                    <input type="text" id="captcha" name="captcha" value={ReCaptchaToken} readOnly hidden />
                 </div>
+
+                <TextInput id="captcha" value={ReCaptchaToken} readOnly hidden required />
 
                 <div className={`${BaseClassName.current}__submitButton`}>
                     <button type="submit" disabled={ReCaptchaToken === ''}>

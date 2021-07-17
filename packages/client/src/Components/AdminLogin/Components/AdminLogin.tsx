@@ -45,7 +45,7 @@ const AdminLogin: React.FC<PropsType> = props => {
             <h1>Авторизация</h1>
 
             <form className="adminLogin__form" onSubmit={formSubmitHandler}>
-                <TextInput id="auth_key" type="password" className="adminLogin__input" label="Введите пароль" isLabelHidden required />
+                <TextInput id="auth_key" type="password" className="adminLogin__formItem" label="Введите пароль" isLabelHidden required />
 
                 <div className="adminLogin__captchaInput">
                     <ReCaptcha
@@ -54,9 +54,9 @@ const AdminLogin: React.FC<PropsType> = props => {
                             setReCaptchaToken(typeof token === 'string' ? token : '');
                         }}
                     />
-
-                    <input type="password" id="captcha" name="captcha" value={ReCaptchaToken} readOnly hidden />
                 </div>
+
+                <TextInput id="captcha" value={ReCaptchaToken} readOnly hidden required />
 
                 <div className="adminLogin__submitButton">
                     <button type="submit" disabled={IsLoginPending}>

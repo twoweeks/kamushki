@@ -19,7 +19,7 @@ const EditGameInfoModal: React.FC<PropsType> = props => {
     const { handleModalClose } = props;
 
     const BaseClassName = useRef('adminGamesPage__editGameInfoModal');
-    const BaseInputClassName = useRef(`${BaseClassName.current}__input`);
+    const BaseInputClassName = useRef(`${BaseClassName.current}__formItem`);
 
     const formSubmitHandler = useCallback(
         (event: React.FormEvent<HTMLFormElement>) => {
@@ -127,7 +127,7 @@ const EditGameInfoModal: React.FC<PropsType> = props => {
                     maxLength={100}
                 />
 
-                <input id="_id" name="_id" value={EditableGameInfo._id} readOnly hidden />
+                <TextInput id="_id" value={EditableGameInfo._id} readOnly hidden required />
 
                 <div className={`${BaseClassName.current}__button`}>
                     <button type="submit">Сохранить изменения</button>

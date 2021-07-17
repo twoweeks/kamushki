@@ -1,5 +1,5 @@
 .adminGamesPage__editGameInfoModal {
-    &__input {
+    &__formItem {
         $i: &;
 
         &:not(:first-child) {
@@ -12,34 +12,41 @@
             }
         }
 
+        &__label,
+        &__input {
+            display: block;
+        }
+
         &__label {
             font-weight: 500;
         }
 
         &[data-required] {
             #{$i}__label {
-                label {
-                    &::after {
-                        content: '*';
-                        margin-left: 0.1em;
+                &::after {
+                    content: '*';
+                    margin-left: 0.1em;
 
-                        color: #d21010;
-                    }
+                    color: #d21010;
                 }
             }
         }
 
         &__input {
-            input:not([type='checkbox']),
-            textarea {
+            &:not([type='checkbox']),
+            &[type='textarea'] {
                 display: block;
                 width: 100%;
 
                 padding: 10px;
             }
 
-            textarea {
+            &[type='textarea'] {
                 resize: vertical;
+            }
+
+            &:read-only {
+                cursor: default;
             }
         }
 
