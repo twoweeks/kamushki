@@ -21,7 +21,7 @@ const StatusModal: React.FC<PropsType> = props => {
                     </p>
                     <p>Ура! 🤗</p>
                     <div className="sendPage__statusModal__modal__button">
-                        <button onClick={handleModalClose}>закрыть</button>
+                        <button onClick={handleModalClose}>скрыть</button>
                     </div>
                 </>
             ) : null}
@@ -56,6 +56,9 @@ const StatusModal: React.FC<PropsType> = props => {
                         <strong>Форма закрыта</strong>
                     </p>
                     <p>Напишите на почту организатору</p>
+                    <div className="sendPage__statusModal__modal__button">
+                        <button onClick={handleModalClose}>скрыть</button>
+                    </div>
                 </>
             ) : null}
 
