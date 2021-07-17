@@ -61,7 +61,7 @@ const Routes: FastifyPluginAsync = async (app, options) => {
         if (RequestBody) {
             // we need to delete the "captcha" field,
             // and for this we need to make it optional
-            const GameData: Omit<SendFormQueryParamsType, 'captcha'> & { captcha?: string } = RequestBody;
+            const GameData: Omit<SendFormQueryParamsType, 'captcha'> & { captcha?: string } = { ...RequestBody };
 
             delete GameData.captcha;
 

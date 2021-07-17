@@ -4,11 +4,12 @@ import CONFIG from '../config.js';
 
 import type { ContestsQueryResponseType } from '../types.js';
 import type { GamesQueryParamsType, GameItemType } from '../types.js';
+import type { EditGameInfoQueryParamsType } from '../types.js';
 import type { DeleteGamesQueryParamsType } from '../types.js';
 
 import { getIsAuth } from '../utils/check-auth.js';
 
-import { getContests, getGames, deleteGames } from '../db/games.js';
+import { getContests, getGames, editGameInfo, deleteGames } from '../db/games.js';
 
 const Routes: FastifyPluginAsync = async (app, options) => {
     app.addHook('onRequest', (req, res, next) => {
@@ -57,12 +58,44 @@ const Routes: FastifyPluginAsync = async (app, options) => {
         res.send(games);
     });
 
-    app.patch('/edit-game-info', async (req, res) => {
-        res.status(200).send();
+    const EditGameSchema: FastifySchema = {
+        body: {
+            type: 'object',
+            required: ['_id', 'title', 'email', 'date', 'archive', 'screenshot'],
+            properties: {
+                _id: { type: 'string' },
+                title: { type: 'string', minLength: 1, maxLength: 100 },
+                email: { type: 'string', minLength: 1, maxLength: 50 },
+                date: { type: 'string' },
+                genre: { type: 'string', maxLength: 50 },
+                description: { type: 'string', maxLength: 200 },
+                tools: { type: 'string', maxLength: 100 },
+                archive: { type: 'string', minLength: 1, maxLength: 100 },
+                screenshot: { type: 'string', minLength: 1, maxLength: 100 },
+            },
+            additionalProperties: false,
+        },
+    };
+
+    app.patch('/edit-game-info', { schema: EditGameSchema }, async (req, res) => {
+        const RequestBody = req.body as EditGameInfoQueryParamsType;
+
+        const NewGameInfo = { ...RequestBody } as Omit<EditGameInfoQueryParamsType, '_id'> & { _id?: string };
+
+        delete NewGameInfo._id;
+
+        try {
+            await editGameInfo(RequestBody._id, NewGameInfo);
+        } catch (err) {
+            console.warn(err, '/', new Date().toISOString());
+            res.status(500).send();
+        }
+
+        res.status(200).send(RequestBody);
     });
 
     const DeleteGamesSchema: FastifySchema = {
-        querystring: {
+        body: {
             type: 'object',
             properties: {
                 games: {
@@ -75,16 +108,16 @@ const Routes: FastifyPluginAsync = async (app, options) => {
     };
 
     app.delete('/delete-games', { schema: DeleteGamesSchema }, async (req, res) => {
-        const { games: QueryGamesIDs } = req.body as DeleteGamesQueryParamsType;
+        const GamesIDs = req.body as DeleteGamesQueryParamsType;
 
         try {
-            await deleteGames(QueryGamesIDs);
+            await deleteGames(GamesIDs);
         } catch (err) {
             console.warn(err, '/', new Date().toISOString());
             res.status(500).send();
         }
 
-        res.status(200).send();
+        res.status(200).send(GamesIDs);
     });
 };
 

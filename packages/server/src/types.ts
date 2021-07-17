@@ -47,6 +47,6 @@ export type GamesQueryParamsType = {
 
 export type GamesQueryResponseType = GameItemType[];
 
-export type DeleteGamesQueryParamsType = {
-    games: string[];
-};
+export type EditGameInfoQueryParamsType = Omit<GameItemType, 'contest' | 'stage' | 'date'>;
+
+export type DeleteGamesQueryParamsType = string[];
