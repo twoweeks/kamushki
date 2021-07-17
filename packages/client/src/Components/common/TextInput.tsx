@@ -1,7 +1,6 @@
 import React from 'react';
 
 type PropsTyp = React.InputHTMLAttributes<HTMLInputElement> & {
-    className: string;
     id: string;
     label: string | JSX.Element;
     isLabelHidden?: boolean;
@@ -18,11 +17,11 @@ export const TextInput: React.FC<PropsTyp> = props => {
     const { inputStyle } = props;
 
     return (
-        <div className={`${className} ${className}--${type}`} data-required={required ? '' : null}>
-            <div className={`${className}__label${isLabelHidden ? ' hidden' : ''}`}>
+        <div className={className ? ` ${className} ${className}--${type}` : void 0} data-required={required ? '' : null}>
+            <div className={className ? `${className}__label` : void 0} hidden={isLabelHidden ? true : void 0}>
                 <label htmlFor={id}>{label}</label>
             </div>
-            <div className={`${className}__input`}>
+            <div className={className ? `${className}__input` : void 0}>
                 {type === 'textarea' ? (
                     <textarea name={id} style={inputStyle} {...{ id, placeholder, maxLength, required }} />
                 ) : (
