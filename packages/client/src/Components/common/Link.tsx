@@ -2,7 +2,7 @@ import React from 'react';
 
 type PropsType = React.AnchorHTMLAttributes<HTMLAnchorElement>;
 
-const Link: React.FC<PropsType> = props => {
+export const Link: React.FC<PropsType> = props => {
     const { href, target = '_blank', children } = props;
 
     return (
@@ -11,5 +11,3 @@ const Link: React.FC<PropsType> = props => {
         </a>
     );
 };
-
-export default Link;

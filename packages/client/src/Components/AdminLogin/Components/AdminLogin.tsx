@@ -4,7 +4,7 @@ import { ReCaptchaV2 as ReCaptcha, EReCaptchaV2Size } from 'react-recaptcha-x';
 import type { LoginQueryParamsType } from '../../../api/types/authTypes';
 import type { AdminLoginStateType } from '../AdminLoginTypes';
 
-import TextInput from '../../common/TextInput';
+import { TextInput } from '../../common';
 
 import './AdminLogin.scss';
 

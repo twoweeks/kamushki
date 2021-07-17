@@ -6,10 +6,7 @@ import CONFIG from '../../../config';
 import type { SendFormQueryParamsType } from '../../../api/types/sendFormTypes';
 import type { SendPageStateType } from '../SendPageTypes';
 
-import TextInput from '../../common/TextInput';
-import CheckboxInput from '../../common/CheckboxInput';
-import Link from '../../common/Link';
-
+import { TextInput, CheckboxInput, Link } from '../../common';
 import './SendPage.scss';
 
 type PropsType = Pick<SendPageStateType, 'FormStatus' | 'IsFormStatusPending'> & {

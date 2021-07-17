@@ -1,12 +1,12 @@
 import React from 'react';
 
-type PropsTyp = {
+type PropsTyp = React.InputHTMLAttributes<HTMLInputElement> & {
     className: string;
     id: string;
     label: string | JSX.Element;
-} & Pick<React.InputHTMLAttributes<HTMLInputElement>, 'required'>;
+};
 
-const CheckboxInput: React.FC<PropsTyp> = props => {
+export const CheckboxInput: React.FC<PropsTyp> = props => {
     const { className, id } = props;
     const { label } = props;
     const { required } = props;
@@ -22,5 +22,3 @@ const CheckboxInput: React.FC<PropsTyp> = props => {
         </div>
     );
 };
-
-export default CheckboxInput;

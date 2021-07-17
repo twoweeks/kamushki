@@ -3,7 +3,7 @@ import React, { useState, useCallback } from 'react';
 import type { DeleteGamesQueryParamsType } from '../../../../api/types/gamesTypes';
 import type { AdminGamesPageStateType, GamesCountObjectType } from '../GamesPageTypes';
 
-import Link from '../../../common/Link';
+import { Link } from '../../../common';
 
 import './GamesPage.scss';
 

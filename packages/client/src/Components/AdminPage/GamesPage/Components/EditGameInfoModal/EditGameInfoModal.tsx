@@ -3,7 +3,7 @@ import React, { useRef, useCallback } from 'react';
 import type { EditGameInfoQueryParamsType } from '../../../../../api/types/gamesTypes';
 import type { AdminGamesPageStateType } from '../../GamesPageTypes';
 
-import TextInput from '../../../../common/TextInput';
+import { TextInput } from '../../../../common';
 
 import './EditGameInfoModal.scss';
 

@@ -9,7 +9,7 @@ type PropsTyp = React.InputHTMLAttributes<HTMLInputElement> & {
     inputStyle?: React.CSSProperties;
 };
 
-const TextInput: React.FC<PropsTyp> = props => {
+export const TextInput: React.FC<PropsTyp> = props => {
     const { className, id } = props;
     const { label, isLabelHidden, extraText } = props;
     const { type = 'text', placeholder, maxLength } = props;
@@ -39,5 +39,3 @@ const TextInput: React.FC<PropsTyp> = props => {
         </div>
     );
 };
-
-export default TextInput;
