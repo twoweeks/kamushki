@@ -1,19 +1,20 @@
 import React from 'react';
 
-type PropsTyp = {
+type PropsTyp = React.InputHTMLAttributes<HTMLInputElement> & {
     className: string;
     id: string;
     label: string | JSX.Element;
     isLabelHidden?: boolean;
     extraText?: string | JSX.Element;
     inputStyle?: React.CSSProperties;
-} & Pick<React.InputHTMLAttributes<HTMLInputElement>, 'type' | 'required' | 'maxLength' | 'placeholder'>;
+};
 
 const TextInput: React.FC<PropsTyp> = props => {
     const { className, id } = props;
     const { label, isLabelHidden, extraText } = props;
     const { type = 'text', placeholder, maxLength } = props;
-    const { required } = props;
+    const { defaultValue, value } = props;
+    const { required, readOnly } = props;
     const { inputStyle } = props;
 
     return (
@@ -25,7 +26,13 @@ const TextInput: React.FC<PropsTyp> = props => {
                 {type === 'textarea' ? (
                     <textarea name={id} style={inputStyle} {...{ id, placeholder, maxLength, required }} />
                 ) : (
-                    <input name={id} style={inputStyle} {...{ id, type, placeholder, maxLength, required }} />
+                    <input
+                        name={id}
+                        style={inputStyle}
+                        {...{ id, type, placeholder, maxLength }}
+                        {...{ defaultValue, value }}
+                        {...{ required, readOnly }}
+                    />
                 )}
             </div>
             {extraText ? <div className={`${className}__extraText`}>{extraText}</div> : null}

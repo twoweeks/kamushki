@@ -2,12 +2,13 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 
 import { getContestsThunk, getGamesThunk, deleteGamesThunk } from '../GamesPageReduxSlice';
-import { deleteGamesFromData, setStageFIlter, resetData } from '../GamesPageReduxSlice';
+import { setStageFIlter, setEditableGameID, resetState } from '../GamesPageReduxSlice';
 
 import { getContestsData, getFiltredGamesData, getStageFilterValue } from '../GamesPageReduxSelectors';
-import { getGamesCount, getIsDataPending } from '../GamesPageReduxSelectors';
+import { getGamesCount, getIsDataPending, getEditableGameID } from '../GamesPageReduxSelectors';
 
 import GamesPage from './GamesPage';
+import EditGameInfoModal from './EditGameInfoModal/EditGameInfoModalContainer';
 
 const GamesPageContainer: React.FC = () => {
     const ContestsData = useSelector(getContestsData);
@@ -15,6 +16,7 @@ const GamesPageContainer: React.FC = () => {
     const IsDataPending = useSelector(getIsDataPending);
     const GamesCount = useSelector(getGamesCount);
     const StageFilterValue = useSelector(getStageFilterValue);
+    const EditableGameID = useSelector(getEditableGameID);
 
     const dispatch = useDispatch();
 
@@ -24,7 +26,7 @@ const GamesPageContainer: React.FC = () => {
         dispatch(getContestsThunk());
 
         return () => {
-            dispatch(resetData());
+            dispatch(resetState());
         };
     }, []);
 
@@ -48,21 +50,27 @@ const GamesPageContainer: React.FC = () => {
         dispatch(setStageFIlter(stage));
     }, []);
 
-    const handleDeleteGamesButtonClick = useCallback((gameIDs: string[]) => {
+    const handleGamesEditButtonClick = useCallback((gameID: Parameters<typeof setEditableGameID>[0]) => {
+        dispatch(setEditableGameID(gameID));
+    }, []);
+
+    const handleDeleteGamesButtonClick = useCallback((gamesID: string[]) => {
         const IsConfirmed = confirm('Вы уверены?');
         if (IsConfirmed) {
-            dispatch(deleteGamesThunk({ games: gameIDs }));
-            dispatch(deleteGamesFromData(gameIDs));
+            dispatch(deleteGamesThunk(gamesID));
         }
     }, []);
 
     return (
-        <GamesPage
-            {...{ ContestsData, GamesData, IsDataPending, GamesCount }}
-            {...{ SelectedContest, handleSelectedContestChange }}
-            {...{ StageFilterValue, handleGamesStageFilterChange }}
-            {...{ handleDeleteGamesButtonClick }}
-        />
+        <>
+            <GamesPage
+                {...{ ContestsData, GamesData, IsDataPending, GamesCount }}
+                {...{ SelectedContest, handleSelectedContestChange }}
+                {...{ StageFilterValue, handleGamesStageFilterChange }}
+                {...{ handleGamesEditButtonClick, handleDeleteGamesButtonClick }}
+            />
+            {EditableGameID !== '' ? <EditGameInfoModal /> : null}
+        </>
     );
 };
 

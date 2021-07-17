@@ -7,7 +7,7 @@ import type { AdminGamesPageStateType } from './GamesPageTypes';
 
 export const ReducerName = 'adminGamesPage';
 
-const { getContests, getGames, deleteGames } = GamesAPI;
+const { getContests, getGames, editGameInfo, deleteGames } = GamesAPI;
 
 export const getContestsThunk = createAsyncThunk(`${ReducerName}/getContests`, async () => {
     return await getContests();
@@ -17,9 +17,12 @@ export const getGamesThunk = createAsyncThunk(`${ReducerName}/getGames`, async (
     return await getGames(params);
 });
 
+export const editGameInfoThunk = createAsyncThunk(`${ReducerName}/editGameInfo`, async (params: Parameters<typeof editGameInfo>[0]) => {
+    return await editGameInfo(params);
+});
+
 export const deleteGamesThunk = createAsyncThunk(`${ReducerName}/deleteGames`, async (params: Parameters<typeof deleteGames>[0]) => {
-    const response = await deleteGames(params);
-    return response.status;
+    return await deleteGames(params);
 });
 
 const InnitialState: AdminGamesPageStateType = {
@@ -32,6 +35,7 @@ const InnitialState: AdminGamesPageStateType = {
     Filters: {
         Stage: 'all',
     },
+    EditableGameID: '',
 };
 
 const AdminGamesPage = createSlice({
@@ -42,13 +46,17 @@ const AdminGamesPage = createSlice({
             state.Filters.Stage = action.payload;
         },
 
-        deleteGamesFromData: (state, action: PayloadAction<string[]>) => {
-            state.Data.GamesData = state.Data.GamesData.filter(GameInfo => !action.payload.includes(GameInfo._id));
+        setEditableGameID: (state, action: PayloadAction<AdminGamesPageStateType['EditableGameID']>) => {
+            state.EditableGameID = action.payload;
+        },
+        resetEditableGameID: (state, action: PayloadAction<void>) => {
+            state.EditableGameID = InnitialState.EditableGameID;
         },
 
-        resetData: (state, action: PayloadAction<void>) => {
+        resetState: (state, action: PayloadAction<void>) => {
             state.Data = { ...InnitialState.Data };
             state.Filters = { ...InnitialState.Filters };
+            state.EditableGameID = InnitialState.EditableGameID;
         },
     },
     extraReducers: builder => {
@@ -76,11 +84,27 @@ const AdminGamesPage = createSlice({
             state.Data.IsGamesDataPending = false;
         });
 
+        builder.addCase(editGameInfoThunk.pending, (state, action) => {
+            //
+        });
+        builder.addCase(editGameInfoThunk.fulfilled, (state, action) => {
+            state.Data.GamesData = state.Data.GamesData.map(GameInfo => {
+                if (GameInfo._id === action.payload._id) {
+                    return { ...GameInfo, ...action.payload };
+                } else {
+                    return GameInfo;
+                }
+            });
+        });
+        builder.addCase(editGameInfoThunk.rejected, (state, action) => {
+            console.warn(action.error);
+        });
+
         builder.addCase(deleteGamesThunk.pending, (state, action) => {
             //
         });
         builder.addCase(deleteGamesThunk.fulfilled, (state, action) => {
-            //
+            state.Data.GamesData = state.Data.GamesData.filter(GameInfo => !action.payload.includes(GameInfo._id));
         });
         builder.addCase(deleteGamesThunk.rejected, (state, action) => {
             console.warn(action.error);
@@ -88,6 +112,7 @@ const AdminGamesPage = createSlice({
     },
 });
 
-export const { setStageFIlter, deleteGamesFromData, resetData } = AdminGamesPage.actions;
+export const { setStageFIlter, setEditableGameID } = AdminGamesPage.actions;
+export const { resetState, resetEditableGameID } = AdminGamesPage.actions;
 
 export default AdminGamesPage.reducer;

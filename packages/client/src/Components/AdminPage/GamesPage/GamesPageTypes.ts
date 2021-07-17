@@ -10,6 +10,7 @@ export type AdminGamesPageStateType = {
     Filters: {
         Stage: 'all' | 'demo' | 'final';
     };
+    EditableGameID: string;
 };
 
 export type GamesCountObjectType = {

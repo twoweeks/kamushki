@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from 'react';
 
+import type { DeleteGamesQueryParamsType } from '../../../../api/types/gamesTypes';
 import type { AdminGamesPageStateType, GamesCountObjectType } from '../GamesPageTypes';
 
 import Link from '../../../common/Link';
@@ -13,14 +14,15 @@ type PropsType = Pick<AdminGamesPageStateType['Data'], 'ContestsData' | 'GamesDa
     StageFilterValue: AdminGamesPageStateType['Filters']['Stage'];
     handleSelectedContestChange: (consestNum: number) => void;
     handleGamesStageFilterChange: (stage: AdminGamesPageStateType['Filters']['Stage']) => void;
-    handleDeleteGamesButtonClick: (gamesID: string[]) => void;
+    handleGamesEditButtonClick: (gameID: AdminGamesPageStateType['EditableGameID']) => void;
+    handleDeleteGamesButtonClick: (gamesID: DeleteGamesQueryParamsType) => void;
 };
 
 const GamesPage: React.FC<PropsType> = props => {
     const { GamesData, ContestsData, IsDataPending, GamesCount } = props;
     const { SelectedContest, handleSelectedContestChange } = props;
     const { StageFilterValue, handleGamesStageFilterChange } = props;
-    const { handleDeleteGamesButtonClick } = props;
+    const { handleGamesEditButtonClick, handleDeleteGamesButtonClick } = props;
 
     const [RemovableGamesList, setRemovableGamesList] = useState<string[]>([]);
 
@@ -125,13 +127,13 @@ const GamesPage: React.FC<PropsType> = props => {
                             <td>{GameInfo.email}</td>
                             <td>{GameInfo.stage}</td>
                             <td>{GameInfo.date}</td>
-                            <td>{GameInfo.description ?? '—'}</td>
-                            <td>{GameInfo.genre ?? '—'}</td>
+                            <td>{GameInfo.description}</td>
+                            <td>{GameInfo.genre}</td>
                             <td>{parseLink(GameInfo.screenshot)}</td>
                             <td>{parseLink(GameInfo.archive)}</td>
                             <td>
+                                <button onClick={() => handleGamesEditButtonClick(GameInfo._id)}>✍️</button>
                                 <button onClick={() => handleDeleteGamesButtonClick([GameInfo._id])}>🗑️</button>
-                                <button>✍️</button>
                             </td>
                         </tr>
                     ))}

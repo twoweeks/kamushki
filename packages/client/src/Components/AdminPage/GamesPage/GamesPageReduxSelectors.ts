@@ -86,3 +86,15 @@ export const getFiltredGamesData = createSelector<
             return GamesData;
     }
 });
+
+export const getEditableGameID = createSelector<RootStateType, AdminGamesPageStateType['EditableGameID'], AdminGamesPageStateType['EditableGameID']>(
+    state => state.adminGamesPage.EditableGameID,
+    EditableGameID => EditableGameID
+);
+
+export const getEditableGameInfo = createSelector<
+    RootStateType,
+    AdminGamesPageStateType['Data']['GamesData'],
+    AdminGamesPageStateType['EditableGameID'],
+    AdminGamesPageStateType['Data']['GamesData'][0] | undefined
+>(getGamesData, getEditableGameID, (GamesData, EditableGameID) => GamesData.find(GameInfo => GameInfo._id === EditableGameID));
