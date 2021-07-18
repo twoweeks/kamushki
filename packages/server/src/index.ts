@@ -50,7 +50,7 @@ app.addHook('onRequest', (req, res, next) => {
 
 app.register(FastifySwaggerPlugin, {
     routePrefix: DocsPath,
-    swagger: {
+    openapi: {
         info: {
             title: 'TWG App API',
             version: '1.0.0',
