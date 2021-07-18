@@ -20,18 +20,24 @@ const Routes: FastifyPluginAsync = async (app, options) => {
     const SendGameSchema: FastifySchema = {
         body: {
             type: 'object',
-            required: ['title', 'email', 'archive', 'screenshot', 'captcha'],
+            required: ['gameInfo', 'captcha'],
             properties: {
-                title: { type: 'string', minLength: 1, maxLength: 100 },
-                email: { type: 'string', minLength: 1, maxLength: 50 },
-                genre: { type: 'string', maxLength: 50 },
-                description: { type: 'string', maxLength: 200 },
-                tools: { type: 'string', maxLength: 100 },
-                archive: { type: 'string', minLength: 1, maxLength: 100 },
-                screenshot: { type: 'string', minLength: 1, maxLength: 100 },
+                gameInfo: {
+                    type: 'object',
+                    required: ['title', 'email', 'archive', 'screenshot'],
+                    properties: {
+                        title: { type: 'string', minLength: 1, maxLength: 100 },
+                        email: { type: 'string', minLength: 1, maxLength: 50 },
+                        genre: { type: 'string', maxLength: 50 },
+                        description: { type: 'string', maxLength: 200 },
+                        tools: { type: 'string', maxLength: 100 },
+                        archive: { type: 'string', minLength: 1, maxLength: 100 },
+                        screenshot: { type: 'string', minLength: 1, maxLength: 100 },
+                    },
+                    additionalProperties: false,
+                },
                 captcha: { type: 'string', minLength: 1 },
             },
-            additionalProperties: false,
         },
     };
 
@@ -58,22 +64,14 @@ const Routes: FastifyPluginAsync = async (app, options) => {
             return;
         }
 
-        if (RequestBody) {
-            // we need to delete the "captcha" field,
-            // and for this we need to make it optional
-            const GameData: Omit<SendFormQueryParamsType, 'captcha'> & { captcha?: string } = { ...RequestBody };
+        await addGame({
+            ...RequestBody.gameInfo,
+            contest: CONFIG.contest.number,
+            stage: GameStage ?? 'demo',
+            date: new Date().toISOString(),
+        });
 
-            delete GameData.captcha;
-
-            await addGame({
-                ...GameData,
-                contest: CONFIG.contest.number,
-                stage: GameStage ?? 'demo',
-                date: new Date().toISOString(),
-            });
-
-            res.status(200).send(ResponseBody);
-        }
+        res.status(200).send(ResponseBody);
     });
 };
 

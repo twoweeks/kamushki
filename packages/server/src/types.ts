@@ -26,7 +26,10 @@ export type GameItemType = {
     date: string;
 };
 
-export type SendFormQueryParamsType = Omit<GameItemType, '_id' | 'contest' | 'stage' | 'date'> & { captcha: string };
+export type SendFormQueryParamsType = {
+    gameInfo: Omit<GameItemType, '_id' | 'contest' | 'stage' | 'date'>;
+    captcha: string;
+};
 
 export type SendedGameStatusType = 'success' | 'form_closed' | 'wrong_captcha';
 
