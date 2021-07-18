@@ -27,14 +27,11 @@ jobs:
               env:
                   API_RECAPTCHA_CLIENT_KEY: ${{ secrets.RECAPTCHA_V2_CLIENT_KEY }}
 
-            - name: Copy SSH key
-              run: |
-                  set -eu
-                  mkdir "$HOME/.ssh"
-                  echo "${{ secrets.SSH_PRIVATE_KEY }}" > "$HOME/.ssh/key"
-                  chmod 600 "$HOME/.ssh/key"
-
             - name: Deploy
-              run: |
-                  cd packages/server/dist
-                  rsync -e "ssh -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . ${{ secrets.SSH_USER_DATA }}:${{ secrets.SERVER_APP_PATH }}
+              uses: wlixcc/SFTP-Deploy-Action@v1.0
+              with:
+                  username: '${{ secrets.SSH_USERNAME }}'
+                  server: '${{ secrets.SSH_HOST }}'
+                  ssh_private_key: '${{ secrets.SSH_PRIVATE_KEY }}'
+                  local_path: './packages/server/dist/*'
+                  remote_path: '${{ secrets.SERVER_APP_PATH }}'
