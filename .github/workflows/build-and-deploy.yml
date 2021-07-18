@@ -22,10 +22,11 @@ jobs:
             - name: Install dependencies
               run: npm ci
 
+            - name: Create .env file
+              run: echo API_RECAPTCHA_CLIENT_KEY=${{ secrets.RECAPTCHA_V2_CLIENT_KEY }} >> packages/client/.env
+
             - name: Build project
               run: npm run assemble
-              env:
-                  API_RECAPTCHA_CLIENT_KEY: ${{ secrets.RECAPTCHA_V2_CLIENT_KEY }}
 
             - name: Deploy
               uses: SamKirkland/FTP-Deploy-Action@4.1.0
