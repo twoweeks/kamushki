@@ -21,6 +21,7 @@ const SendFormTimes: SendFormTimesType = {
 };
 
 const DEFAULT_SERVER_PORT = 3001;
+const DEFAULT_SERVER_HOST = '127.0.0.1';
 
 export default {
     contest: {
@@ -34,6 +35,8 @@ export default {
     send_form_times: SendFormTimes,
 
     server: {
+        host: process.env.APP_IP ?? DEFAULT_SERVER_HOST,
+
         port: Number(process.env.APP_PORT ?? DEFAULT_SERVER_PORT),
 
         db_connection_string: process.env.DB_CONNECTION_STRING ?? 'mongodb://localhost:27017',

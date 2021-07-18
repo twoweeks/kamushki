@@ -87,6 +87,13 @@ app.setNotFoundHandler(async (req, res) => {
     res.sendFile('404.html');
 });
 
-app.listen(CONFIG.server.port);
+app.listen(CONFIG.server.port, CONFIG.server.host, (err, address) => {
+    console.log('Server started on address ', address);
+
+    if (err) {
+        app.log.error(err);
+        process.exit(1);
+    }
+});
 
 createTwitchApiLoop(StaticPath, CONFIG.API_KEYS.twitch.client_id, CONFIG.API_KEYS.twitch.client_secret);
