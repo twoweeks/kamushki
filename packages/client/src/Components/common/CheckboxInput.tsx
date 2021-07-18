@@ -9,7 +9,7 @@ type PropsTyp = React.InputHTMLAttributes<HTMLInputElement> & {
 export const CheckboxInput: React.FC<PropsTyp> = props => {
     const { className, id } = props;
     const { label, isLabelHidden } = props;
-    const { defaultChecked, checked, defaultValue, value } = props;
+    const { defaultChecked, checked } = props;
     const { onChange } = props;
     const { required, readOnly, disabled, hidden } = props;
 
@@ -20,7 +20,7 @@ export const CheckboxInput: React.FC<PropsTyp> = props => {
                 name={id}
                 className={className ? `${className}__input` : void 0}
                 {...{ id }}
-                {...{ defaultChecked, checked, defaultValue, value }}
+                {...{ defaultChecked, checked }}
                 {...{ onChange }}
                 {...{ required, readOnly, disabled, hidden }}
             />
