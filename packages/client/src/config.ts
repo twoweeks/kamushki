@@ -4,6 +4,6 @@ export default {
     },
 
     API_KEYS: {
-        recaptcha: String(import.meta.env.API_RECAPTCHA_CLIENT_KEY ?? ''),
+        recaptcha: String(import.meta.env.VITE_API_RECAPTCHA_CLIENT_KEY ?? ''),
     },
 };
