@@ -35,4 +35,3 @@ jobs:
                   password: ${{ secrets.FTP_PASSWORD }}
                   protocol: ftp
                   local-dir: packages/server/dist/
-                  server-dir: ${{ secrets.SERVER_APP_PATH }}
