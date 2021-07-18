@@ -28,10 +28,12 @@ jobs:
                   API_RECAPTCHA_CLIENT_KEY: ${{ secrets.RECAPTCHA_V2_CLIENT_KEY }}
 
             - name: Deploy
-              uses: wlixcc/SFTP-Deploy-Action@v1.0
+              uses: SamKirkland/FTP-Deploy-Action@4.1.0
               with:
-                  username: '${{ secrets.SSH_USERNAME }}'
-                  server: '${{ secrets.SSH_HOST }}'
-                  ssh_private_key: '${{ secrets.SSH_PRIVATE_KEY }}'
-                  local_path: './packages/server/dist/*'
-                  remote_path: '${{ secrets.SERVER_APP_PATH }}'
+                  server: ${{ secrets.FTP_HOSTNAME }}
+                  username: ${{ secrets.FTP_USERNAME }}
+                  password: ${{ secrets.FTP_PASSWORD }}
+                  protocol: sftp
+                  local-dir: packages/server/dist/
+                  server-dir: ${{ secrets.SERVER_APP_PATH }}
+                  args: --delete
