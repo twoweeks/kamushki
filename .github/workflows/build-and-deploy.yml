@@ -33,7 +33,6 @@ jobs:
                   server: ${{ secrets.FTP_HOSTNAME }}
                   username: ${{ secrets.FTP_USERNAME }}
                   password: ${{ secrets.FTP_PASSWORD }}
-                  protocol: sftp
+                  protocol: ftp
                   local-dir: packages/server/dist/
                   server-dir: ${{ secrets.SERVER_APP_PATH }}
-                  args: --delete
