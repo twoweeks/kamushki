@@ -1,0 +1,40 @@
+name: Build and Deploy
+
+on: [push]
+
+jobs:
+    build-and-deploy:
+        runs-on: ubuntu-latest
+
+        strategy:
+            matrix:
+                node-version: [16.x]
+
+        steps:
+            - name: Checkout 🛎️
+              uses: actions/checkout@v2
+
+            - name: Setup Node.js ${{ matrix.node-version }}
+              uses: actions/setup-node@v2
+              with:
+                  node-version: ${{ matrix.node-version }}
+
+            - name: Install dependencies
+              run: npm ci
+
+            - name: Build project
+              run: npm run assemble
+              env:
+                  API_RECAPTCHA_CLIENT_KEY: ${{ secrets.RECAPTCHA_V2_CLIENT_KEY }}
+
+            - name: Copy SSH key
+              run: |
+                  set -eu
+                  mkdir "$HOME/.ssh"
+                  echo "${{ secrets.SSH_PRIVATE_KEY }}" > "$HOME/.ssh/key"
+                  chmod 600 "$HOME/.ssh/key"
+
+            - name: Deploy
+              run: |
+                  cd packages/server/dist
+                  rsync -e "ssh -i $HOME/.ssh/key -o StrictHostKeyChecking=no" --archive --compress --delete . ${{ secrets.SSH_USER_DATA }}:${{ secrets.SERVER_APP_PATH }}

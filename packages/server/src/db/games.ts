@@ -1,10 +1,12 @@
 import type { GameItemType } from '../types';
 import type { EditGameInfoQueryParamsType } from '../types';
 
+import CONFIG from '../config.js';
+
 import { createMongoClient, ObjectId } from './common.js';
 
-const DB_NAME = 'twg';
-const COLLECTION_NAME = 'games';
+const DB_NAME = CONFIG.server.db_name;
+const COLLECTION_NAME = 'twg_games';
 
 export const getContests = async (): Promise<number[]> => {
     const mongoClient = createMongoClient();

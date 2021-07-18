@@ -1,10 +1,11 @@
 import { createMongoClient } from './common.js';
 
-const DB_NAME = 'live-streams';
+import CONFIG from '../config.js';
+
+const DB_NAME = CONFIG.server.db_name;
+const COLLECTION_NAME = 'twitch-users';
 
 export const getTwitchUsers = async (): Promise<string[]> => {
-    const COLLECTION_NAME = 'twitch-users';
-
     const mongoClient = createMongoClient();
 
     return new Promise((resolve, reject) => {

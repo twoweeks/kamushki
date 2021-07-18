@@ -87,6 +87,6 @@ app.setNotFoundHandler(async (req, res) => {
     res.sendFile('404.html');
 });
 
-await app.listen(CONFIG.server.port);
+app.listen(CONFIG.server.port);
 
-await createTwitchApiLoop(StaticPath, CONFIG.API_KEYS.twitch.client_id, CONFIG.API_KEYS.twitch.client_secret);
+createTwitchApiLoop(StaticPath, CONFIG.API_KEYS.twitch.client_id, CONFIG.API_KEYS.twitch.client_secret);
