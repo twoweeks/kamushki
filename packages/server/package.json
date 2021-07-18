@@ -9,9 +9,10 @@
     },
     "scripts": {
         "cleanup": "del-cli ./dist",
-        "esbuild": "esbuild src/index.ts --bundle --format=cjs --platform=node --outfile=dist/index.js",
+        "esbuild": "esbuild src/index.ts --bundle --external:fastify-swagger --external:saslprep --format=cjs --platform=node --outfile=dist/index.js",
         "copy-static-dir": "ncp src/static/ dist/static",
-        "build": "npm run cleanup && npm run esbuild && npm run copy-static-dir",
+        "copy-package-dist-json": "ncp package-dist.json dist/package.json",
+        "build": "npm run cleanup && npm run esbuild && npm run copy-static-dir && copy-package-dist-json",
         "start": "node dist/index.js"
     },
     "dependencies": {
