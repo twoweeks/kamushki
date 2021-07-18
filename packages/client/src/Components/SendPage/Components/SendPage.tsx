@@ -22,16 +22,27 @@ const SendPage: React.FC<PropsType> = props => {
     const formSubmitHandler = useCallback((event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
 
-        const SendFormData = Object.fromEntries(new FormData(event.target as HTMLFormElement)) as SendFormQueryParamsType & { ready?: 'on' | 'off' };
+        const _formData = new FormData(event.target as HTMLFormElement);
+        const SendFormData = Object.fromEntries(_formData) as SendFormQueryParamsType['gameInfo'] & {
+            captcha?: SendFormQueryParamsType['captcha'];
+            ready?: 'on' | 'off';
+        };
 
         if (!SendFormData.ready || SendFormData.ready !== 'on') {
             alert('Не прочтён регламент конкурса');
             return;
         }
 
+        if (!SendFormData.captcha) {
+            alert('Не пройдена капча');
+            return;
+        }
+
+        const GameInfo = { ...SendFormData };
+
         // удаляем лишние поля (мало ли)
 
-        const NeededFields: (keyof SendFormQueryParamsType)[] = [
+        const RequiredFields: (keyof SendFormQueryParamsType['gameInfo'])[] = [
             'title',
             'email',
             'genre',
@@ -39,27 +50,19 @@ const SendPage: React.FC<PropsType> = props => {
             'tools',
             'archive',
             'screenshot',
-            'captcha',
         ];
 
-        Object.keys(SendFormData).forEach(_key => {
-            const key = _key as keyof SendFormQueryParamsType;
-            if (!NeededFields.includes(key)) {
-                delete SendFormData[key];
-            }
+        Object.keys(GameInfo).forEach(_key => {
+            const key = _key as keyof SendFormQueryParamsType['gameInfo'];
+            if (!RequiredFields.includes(key)) delete GameInfo[key];
         });
 
-        if (!SendFormData.captcha) {
-            alert('Не пройдена капча');
-            return;
-        }
-
-        if (!SendFormData.title || !SendFormData.email || !SendFormData.archive || !SendFormData.screenshot || !SendFormData.captcha) {
+        if (!GameInfo.title || !GameInfo.email || !GameInfo.archive || !GameInfo.screenshot) {
             alert('Не заполнены обязательные поля');
             return;
         }
 
-        formDataHandler(SendFormData);
+        formDataHandler({ gameInfo: GameInfo, captcha: SendFormData.captcha });
     }, []);
 
     const BaseClassName = useRef('sendPage');
