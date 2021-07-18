@@ -12,7 +12,7 @@
         "esbuild": "esbuild src/index.ts --bundle --external:fastify-swagger --external:saslprep --format=cjs --platform=node --outfile=dist/index.js",
         "copy-static-dir": "ncp src/static/ dist/static",
         "copy-package-dist-json": "ncp package-dist.json dist/package.json",
-        "build": "npm run cleanup && npm run esbuild && npm run copy-static-dir && copy-package-dist-json",
+        "build": "npm run cleanup && npm run esbuild && npm run copy-static-dir && npm run copy-package-dist-json",
         "start": "node dist/index.js"
     },
     "dependencies": {
