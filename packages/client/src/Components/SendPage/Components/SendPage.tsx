@@ -126,7 +126,7 @@ const SendPage: React.FC<PropsType> = props => {
                     label="Жанр"
                     placeholder="Адвенчура"
                     extraText="Максимум 50 символов"
-                    defaultValue={getFormDataStorageItemValue('description')}
+                    defaultValue={getFormDataStorageItemValue('genre')}
                     maxLength={50}
                 />
 
@@ -137,7 +137,7 @@ const SendPage: React.FC<PropsType> = props => {
                     label="Описание игры"
                     placeholder="Пользователь может играть лесными эльфами, охраной дворца и злодеем. И если пользователь играет эльфами то эльфы в лесу, домики деревяные набигают солдаты дворца и злодеи. Можно грабить корованы..."
                     extraText="Максимум 200 символов, без переносов на новую строку"
-                    defaultValue={getFormDataStorageItemValue('genre')}
+                    defaultValue={getFormDataStorageItemValue('description')}
                     maxLength={200}
                     inputStyle={{ height: 100 }}
                 />
