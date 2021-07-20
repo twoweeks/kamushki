@@ -4,18 +4,20 @@ import { ReCaptchaV2 as ReCaptcha, EReCaptchaV2Size } from 'react-recaptcha-x';
 import CONFIG from '../../../config';
 
 import type { SendFormQueryParamsType } from '../../../api/types/sendFormTypes';
-import type { SendPageStateType } from '../SendPageTypes';
+import type { SendPageStateType, FormDataStorageItemType } from '../SendPageTypes';
 
 import { TextInput, CheckboxInput, Link } from '../../common';
 import './SendPage.scss';
 
 type PropsType = Pick<SendPageStateType, 'FormStatus' | 'IsFormStatusPending'> & {
     formDataHandler: (data: SendFormQueryParamsType) => void;
+    getFormDataStorageItemValue: (field: keyof FormDataStorageItemType) => string | undefined;
 };
 
 const SendPage: React.FC<PropsType> = props => {
     const { FormStatus, IsFormStatusPending } = props;
     const { formDataHandler } = props;
+    const { getFormDataStorageItemValue } = props;
 
     const [ReCaptchaToken, setReCaptchaToken] = useState<string>('');
 
@@ -102,6 +104,7 @@ const SendPage: React.FC<PropsType> = props => {
                     label="Название игры"
                     placeholder="Ограбитель караванов 4"
                     extraText="Максимум 100 символов"
+                    defaultValue={getFormDataStorageItemValue('title')}
                     maxLength={100}
                 />
 
@@ -113,6 +116,7 @@ const SendPage: React.FC<PropsType> = props => {
                     label="Почта"
                     placeholder="kirillsupergamedev@yandex.ru"
                     extraText="Укажите почту, через которую с вами можно будет связаться. Максимум 50 символов"
+                    defaultValue={getFormDataStorageItemValue('email')}
                     maxLength={50}
                 />
 
@@ -122,6 +126,7 @@ const SendPage: React.FC<PropsType> = props => {
                     label="Жанр"
                     placeholder="Адвенчура"
                     extraText="Максимум 50 символов"
+                    defaultValue={getFormDataStorageItemValue('description')}
                     maxLength={50}
                 />
 
@@ -132,6 +137,7 @@ const SendPage: React.FC<PropsType> = props => {
                     label="Описание игры"
                     placeholder="Пользователь может играть лесными эльфами, охраной дворца и злодеем. И если пользователь играет эльфами то эльфы в лесу, домики деревяные набигают солдаты дворца и злодеи. Можно грабить корованы..."
                     extraText="Максимум 200 символов, без переносов на новую строку"
+                    defaultValue={getFormDataStorageItemValue('genre')}
                     maxLength={200}
                     inputStyle={{ height: 100 }}
                 />
@@ -143,6 +149,7 @@ const SendPage: React.FC<PropsType> = props => {
                     label="Инструменты"
                     placeholder="Unity, Blender, Paint"
                     extraText="Максимум 100 символов, без переносов на новую строку"
+                    defaultValue={getFormDataStorageItemValue('tools')}
                     maxLength={100}
                 />
 

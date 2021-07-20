@@ -8,6 +8,7 @@ type PropsTyp = React.InputHTMLAttributes<HTMLInputElement> & {
     inputStyle?: React.CSSProperties;
 } & {
     onTextareaChange?: React.HTMLAttributes<HTMLTextAreaElement>['onChange'];
+    onTextareaInput?: React.HTMLAttributes<HTMLTextAreaElement>['onInput'];
 };
 
 export const TextInput: React.FC<PropsTyp> = props => {
@@ -15,7 +16,7 @@ export const TextInput: React.FC<PropsTyp> = props => {
     const { label, isLabelHidden, extraText } = props;
     const { type = 'text', placeholder, maxLength } = props;
     const { defaultValue, value } = props;
-    const { onChange, onTextareaChange } = props;
+    const { onChange, onInput, onTextareaChange, onTextareaInput } = props;
     const { required, readOnly, disabled, hidden } = props;
     const { inputStyle } = props;
 
@@ -37,9 +38,9 @@ export const TextInput: React.FC<PropsTyp> = props => {
             ) : null}
 
             {type === 'textarea' ? (
-                <textarea {...UniversalInputProps} onChange={onTextareaChange} />
+                <textarea {...UniversalInputProps} onChange={onTextareaChange} onInput={onTextareaInput} />
             ) : (
-                <input {...UniversalInputProps} {...{ onChange }} />
+                <input {...UniversalInputProps} {...{ onChange, onInput }} />
             )}
 
             {extraText ? <div className={`${className}__extraText`}>{extraText}</div> : null}
