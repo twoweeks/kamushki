@@ -122,7 +122,7 @@ const SendPage: React.FC<PropsType> = props => {
 
                 <TextInput
                     className={BaseInputClassName.current}
-                    id="description"
+                    id="genre"
                     label="Жанр"
                     placeholder="Адвенчура"
                     extraText="Максимум 50 символов"
@@ -132,7 +132,7 @@ const SendPage: React.FC<PropsType> = props => {
 
                 <TextInput
                     className={BaseInputClassName.current}
-                    id="genre"
+                    id="description"
                     type="textarea"
                     label="Описание игры"
                     placeholder="Пользователь может играть лесными эльфами, охраной дворца и злодеем. И если пользователь играет эльфами то эльфы в лесу, домики деревяные набигают солдаты дворца и злодеи. Можно грабить корованы..."
