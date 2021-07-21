@@ -41,21 +41,21 @@ const GamesPage: React.FC<PropsType> = props => {
         [handleDeleteGamesButtonClick, RemovableGamesList]
     );
 
-    const parseLink = useCallback((linkText: string) => {
+    const parseLink = useCallback((linkHref: string, linkText: string) => {
         let text = <></>;
 
         try {
-            const LinkURL = new URL(linkText);
+            const LinkURL = new URL(linkHref);
 
             text = (
                 <>
-                    <Link href={linkText}>ссылка</Link> ({LinkURL.hostname})
+                    <Link href={linkHref}>{linkText}</Link> <span title={linkHref}>({LinkURL.hostname})</span>
                 </>
             );
         } catch (e) {
             text = (
-                <span style={{ color: 'red' }} title={linkText}>
-                    !!! wrong !!!
+                <span style={{ color: 'red' }} title={linkHref}>
+                    !!! {linkText} !!!
                 </span>
             );
         }
@@ -63,8 +63,30 @@ const GamesPage: React.FC<PropsType> = props => {
         return text;
     }, []);
 
+    const parseEmail = useCallback((emailText: string) => {
+        const EmailTextSplitted = emailText.split('@');
+
+        return EmailTextSplitted.length === 2 ? (
+            <>
+                <span>{EmailTextSplitted[0]}</span>@{EmailTextSplitted[1]}
+            </>
+        ) : (
+            <span style={{ color: 'red' }} title={emailText}>
+                !!! error !!!
+            </span>
+        );
+    }, []);
+
+    const parseDate = useCallback((dateText: string) => {
+        return new Date(dateText).toLocaleDateString('ru', { hour: 'numeric', minute: 'numeric' });
+    }, []);
+
     const commonFormSubmitHandler = useCallback((event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+    }, []);
+
+    const getColumnClassName = useCallback((columnName: string) => {
+        return `adminGamesPage__table__column${columnName ? ` adminGamesPage__table__column--${columnName}` : ''}`;
     }, []);
 
     return (
@@ -105,35 +127,50 @@ const GamesPage: React.FC<PropsType> = props => {
             <table className="adminGamesPage__table">
                 <thead>
                     <tr>
-                        <th></th>
+                        <th className={getColumnClassName('checkbox')}></th>
                         <th>Название</th>
-                        <th>Почта автора</th>
+                        <th className={getColumnClassName('email')}>Почта автора</th>
                         <th>Стадия</th>
                         <th>Дата</th>
+                        <th>Жанр</th>
                         <th>Описание</th>
                         <th>Инструменты</th>
-                        <th>Cкриншот/логотип</th>
-                        <th>Архив</th>
-                        <th>Опции</th>
+                        <th>Ссылки</th>
+                        <th className={getColumnClassName('options')}>Опции</th>
                     </tr>
                 </thead>
                 <tbody>
                     {GamesData.map(GameInfo => (
                         <tr key={GameInfo._id}>
-                            <td>
-                                <input type="checkbox" onChange={() => hadleGameCheckboxClick(GameInfo._id)} />
+                            <td className={getColumnClassName('checkbox')}>
+                                <form onSubmit={commonFormSubmitHandler}>
+                                    <label htmlFor="delete" hidden>
+                                        Пометить игру <q>{GameInfo.title}</q> на массовое удаление
+                                    </label>
+                                    <input id="delete" type="checkbox" onChange={() => hadleGameCheckboxClick(GameInfo._id)} />
+                                </form>
                             </td>
                             <td>{GameInfo.title}</td>
-                            <td>{GameInfo.email}</td>
+                            <td className={getColumnClassName('email')}>{parseEmail(GameInfo.email)}</td>
                             <td>{GameInfo.stage}</td>
-                            <td>{GameInfo.date}</td>
-                            <td>{GameInfo.description}</td>
+                            <td>{parseDate(GameInfo.date)}</td>
                             <td>{GameInfo.genre}</td>
-                            <td>{parseLink(GameInfo.screenshot)}</td>
-                            <td>{parseLink(GameInfo.archive)}</td>
+                            <td>{GameInfo.description}</td>
+                            <td>{GameInfo.tools}</td>
                             <td>
-                                <button onClick={() => handleGamesEditButtonClick(GameInfo._id)}>✍️</button>
-                                <button onClick={() => handleDeleteGamesButtonClick([GameInfo._id])}>🗑️</button>
+                                {parseLink(GameInfo.archive, 'архив')}
+                                <br />
+                                {parseLink(GameInfo.screenshot, 'скриншот')}
+                            </td>
+                            <td className={getColumnClassName('options')}>
+                                <form onSubmit={commonFormSubmitHandler} className="adminGamesPage__options">
+                                    <button onClick={() => handleGamesEditButtonClick(GameInfo._id)} title="Отредактировать информацию об игре">
+                                        📝
+                                    </button>
+                                    <button onClick={() => handleDeleteGamesButtonClick([GameInfo._id])} title="Удалить игру">
+                                        🗑️
+                                    </button>
+                                </form>
                             </td>
                         </tr>
                     ))}

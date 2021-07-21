@@ -29,5 +29,53 @@
         tbody {
             text-align: center;
         }
+
+        &__column {
+            &--checkbox {
+                width: 35px;
+
+                input {
+                    width: 20px;
+                    height: 20px;
+                }
+            }
+
+            &--email {
+                span {
+                    filter: blur(3px);
+                }
+
+                &:hover {
+                    span {
+                        filter: blur(0);
+                    }
+                }
+            }
+
+            &--options {
+                width: 90px;
+            }
+        }
+    }
+
+    &__options {
+        display: flex;
+
+        justify-content: center;
+
+        gap: 5px;
+
+        button {
+            padding: 5px;
+
+            background-color: #fff;
+            border: 1px solid #a7a7a7;
+
+            cursor: pointer;
+
+            &:hover {
+                background-color: #f1f1f1;
+            }
+        }
     }
 }
