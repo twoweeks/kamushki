@@ -45,6 +45,8 @@ app.addHook('onRequest', (req, res, next) => {
         return;
     }
 
+    res.header('X-Frame-Options', `ALLOW-FROM ${CONFIG.contest.site}`);
+
     next();
 });
 
