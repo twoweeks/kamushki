@@ -76,7 +76,7 @@ const EditGameInfoModal: React.FC<PropsType> = props => {
 
                 <TextInput
                     className={BaseInputClassName.current}
-                    id="description"
+                    id="genre"
                     type="text"
                     label="Жанр"
                     defaultValue={EditableGameInfo.genre}
@@ -86,7 +86,7 @@ const EditGameInfoModal: React.FC<PropsType> = props => {
 
                 <TextInput
                     className={BaseInputClassName.current}
-                    id="genre"
+                    id="description"
                     type="textarea"
                     label="Описание игры"
                     defaultValue={EditableGameInfo.description}
