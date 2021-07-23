@@ -1,4 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { renderToString } from 'react-dom/server';
+
 import { useSelector, useDispatch } from 'react-redux';
 
 import { getContestsThunk, getGamesThunk, deleteGamesThunk } from '../GamesPageReduxSlice';
@@ -61,6 +63,36 @@ const GamesPageContainer: React.FC = () => {
         }
     }, []);
 
+    const handleExport = useCallback(() => {
+        const DataString = JSON.stringify(
+            GamesData.map(GameInfo => ({
+                title: GameInfo.title,
+                genre: GameInfo.genre,
+                description: GameInfo.description,
+                tools: GameInfo.tools,
+                archive: GameInfo.archive,
+                screenshot: GameInfo.screenshot,
+            })),
+            null,
+            '  '
+        );
+
+        const NewWindow = window.open('about:blank', 'games', 'width=600,height=600');
+
+        if (NewWindow) {
+            NewWindow.document.body.innerHTML = renderToString(
+                <textarea
+                    style={{
+                        width: 550,
+                        height: 550,
+                        resize: 'none',
+                    }}
+                    defaultValue={DataString}
+                />
+            );
+        }
+    }, [GamesData]);
+
     return (
         <>
             <GamesPage
@@ -68,6 +100,7 @@ const GamesPageContainer: React.FC = () => {
                 {...{ SelectedContest, handleSelectedContestChange }}
                 {...{ StageFilterValue, handleGamesStageFilterChange }}
                 {...{ handleGamesEditButtonClick, handleDeleteGamesButtonClick }}
+                {...{ handleExport }}
             />
             {EditableGameID !== '' ? <EditGameInfoModal /> : null}
         </>

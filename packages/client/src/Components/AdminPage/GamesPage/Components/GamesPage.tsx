@@ -16,6 +16,7 @@ type PropsType = Pick<AdminGamesPageStateType['Data'], 'ContestsData' | 'GamesDa
     handleGamesStageFilterChange: (stage: AdminGamesPageStateType['Filters']['Stage']) => void;
     handleGamesEditButtonClick: (gameID: AdminGamesPageStateType['EditableGameID']) => void;
     handleDeleteGamesButtonClick: (gamesID: DeleteGamesQueryParamsType) => void;
+    handleExport: () => void;
 };
 
 const GamesPage: React.FC<PropsType> = props => {
@@ -23,6 +24,7 @@ const GamesPage: React.FC<PropsType> = props => {
     const { SelectedContest, handleSelectedContestChange } = props;
     const { StageFilterValue, handleGamesStageFilterChange } = props;
     const { handleGamesEditButtonClick, handleDeleteGamesButtonClick } = props;
+    const { handleExport } = props;
 
     const [RemovableGamesList, setRemovableGamesList] = useState<string[]>([]);
 
@@ -121,6 +123,10 @@ const GamesPage: React.FC<PropsType> = props => {
                 <form onSubmit={commonFormSubmitHandler}>
                     <button style={{ padding: '2.5px 5px' }} onClick={() => handleDeleteGamesButtonClick(RemovableGamesList)}>
                         Массовое удаление игр{RemovableGamesList.length !== 0 ? ` (${RemovableGamesList.length})` : ''}
+                    </button>
+
+                    <button style={{ padding: '2.5px 5px', marginLeft: 10 }} onClick={handleExport}>
+                        Экспорт текущих данных
                     </button>
                 </form>
             </div>
