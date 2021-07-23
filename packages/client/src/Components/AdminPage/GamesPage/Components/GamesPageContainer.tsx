@@ -65,14 +65,16 @@ const GamesPageContainer: React.FC = () => {
 
     const handleExport = useCallback(() => {
         const DataString = JSON.stringify(
-            GamesData.map(GameInfo => ({
-                title: GameInfo.title,
-                genre: GameInfo.genre,
-                description: GameInfo.description,
-                tools: GameInfo.tools,
-                archive: GameInfo.archive,
-                screenshot: GameInfo.screenshot,
-            })),
+            [...GamesData]
+                .sort((a, b) => +new Date(a.date) - +new Date(b.date))
+                .map(GameInfo => ({
+                    title: GameInfo.title,
+                    genre: GameInfo.genre,
+                    description: GameInfo.description,
+                    tools: GameInfo.tools,
+                    archive: GameInfo.archive,
+                    screenshot: GameInfo.screenshot,
+                })),
             null,
             '  '
         );
