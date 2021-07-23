@@ -83,8 +83,8 @@ const GamesPageContainer: React.FC = () => {
             NewWindow.document.body.innerHTML = renderToString(
                 <textarea
                     style={{
-                        width: 550,
-                        height: 550,
+                        width: '100%',
+                        height: '100%',
                         resize: 'none',
                     }}
                     defaultValue={DataString}
