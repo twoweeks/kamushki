@@ -13,9 +13,9 @@ import { getIsAuth } from './utils/check-auth.js';
 import authRoutes from './routes/auth.js';
 import sendFormRoutes from './routes/sendForm.js';
 import gamesRoutes from './routes/games.js';
-import twitchLiveStreamsRoutes from './routes/twitch-live-streams.js';
+// import twitchLiveStreamsRoutes from './routes/twitch-live-streams.js';
 
-import { createTwitchApiLoop } from './live-streams/twitch-api.js';
+// import { createTwitchApiLoop } from './live-streams/twitch-api.js';
 
 const app = Fastify({});
 
@@ -82,7 +82,7 @@ app.register(sendFormRoutes, { prefix: '/api/send-form' });
 
 app.register(gamesRoutes, { prefix: '/api/games' });
 
-app.register(twitchLiveStreamsRoutes, { prefix: '/api/twitch' });
+// app.register(twitchLiveStreamsRoutes, { prefix: '/api/twitch' });
 
 app.setNotFoundHandler(async (req, res) => {
     res.status(404);
@@ -98,4 +98,4 @@ app.listen(CONFIG.server.port, CONFIG.server.host, (err, address) => {
     }
 });
 
-createTwitchApiLoop(StaticPath, CONFIG.API_KEYS.twitch.client_id, CONFIG.API_KEYS.twitch.client_secret);
+// createTwitchApiLoop(StaticPath, CONFIG.API_KEYS.twitch.client_id, CONFIG.API_KEYS.twitch.client_secret);
