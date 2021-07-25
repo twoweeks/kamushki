@@ -4,7 +4,7 @@ import CONFIG from '../config.js';
 
 import type { SendFormQueryParamsType, SendFormResponseType } from '../types.js';
 
-// import getSendFormStatus from '../utils/get-send-form-status.js';
+import getSendFormStatus from '../utils/get-send-form-status.js';
 import getGameStage from '../utils/get-game-stage.js';
 import verifyCaptcha from '../utils/verify-captcha.js';
 
@@ -13,8 +13,7 @@ import { addGame } from '../db/games.js';
 const Routes: FastifyPluginAsync = async (app, options) => {
     app.get('/get-status', async (req, res) => {
         res.header('Cache-Control', 'no-cache, no-store, must-revalidate');
-        // res.json(getSendFormStatus(CONFIG.send_form_times));
-        res.send({ status: 'open', stage: 'demo' });
+        res.send(getSendFormStatus(CONFIG.send_form_times));
     });
 
     const SendGameSchema: FastifySchema = {
