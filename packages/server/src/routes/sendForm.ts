@@ -7,6 +7,7 @@ import type { SendFormQueryParamsType, SendFormResponseType } from '../types.js'
 import getSendFormStatus from '../utils/get-send-form-status.js';
 import getGameStage from '../utils/get-game-stage.js';
 import verifyCaptcha from '../utils/verify-captcha.js';
+import { prepareString } from '../utils/prepare-string';
 
 import { addGame } from '../db/games.js';
 
@@ -62,6 +63,11 @@ const Routes: FastifyPluginAsync = async (app, options) => {
             res.status(200).send(ResponseBody);
             return;
         }
+
+        Object.keys(RequestBody.gameInfo).forEach(_key => {
+            const key = _key as keyof SendFormQueryParamsType['gameInfo'];
+            RequestBody.gameInfo[key] = prepareString(RequestBody.gameInfo[key]);
+        });
 
         await addGame({
             ...RequestBody.gameInfo,

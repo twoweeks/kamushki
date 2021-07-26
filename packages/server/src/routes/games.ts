@@ -8,6 +8,7 @@ import type { EditGameInfoQueryParamsType } from '../types.js';
 import type { DeleteGamesQueryParamsType } from '../types.js';
 
 import { getIsAuth } from '../utils/check-auth.js';
+import { prepareString } from '../utils/prepare-string.js';
 
 import { getContests, getGames, editGameInfo, deleteGames } from '../db/games.js';
 
@@ -83,6 +84,11 @@ const Routes: FastifyPluginAsync = async (app, options) => {
         const NewGameInfo = { ...RequestBody } as Omit<EditGameInfoQueryParamsType, '_id'> & { _id?: string };
 
         delete NewGameInfo._id;
+
+        Object.keys(NewGameInfo).forEach(_key => {
+            const key = _key as keyof Omit<EditGameInfoQueryParamsType, '_id'>;
+            NewGameInfo[key] = prepareString(NewGameInfo[key]);
+        });
 
         try {
             await editGameInfo(RequestBody._id, NewGameInfo);
