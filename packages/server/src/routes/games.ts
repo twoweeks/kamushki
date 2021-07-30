@@ -7,6 +7,8 @@ import type { EntriesQueryParamsType, GameEntryType } from '../types.js';
 import type { EditEntryInfoQueryParamsType } from '../types.js';
 import type { DeleteEntriesQueryParamsType } from '../types.js';
 
+import * as CONSTS from '../consts.js';
+
 import { getIsAuth } from '../utils/check-auth.js';
 import { prepareString } from '../utils/prepare-string.js';
 
@@ -65,21 +67,21 @@ const Routes: FastifyPluginAsync = async (app, options) => {
             required: ['_id', 'email', 'gameInfo'],
             properties: {
                 _id: { type: 'string' },
-                email: { type: 'string', minLength: 1, maxLength: 50 },
+                email: { type: 'string', minLength: 1, maxLength: CONSTS.ENTRY_EMAIL_MAX_LENGTH },
                 gameInfo: {
                     type: 'object',
                     required: ['title', 'archive', 'screenshot'],
                     properties: {
-                        title: { type: 'string', minLength: 1, maxLength: 100 },
-                        genre: { type: 'string', maxLength: 50 },
-                        description: { type: 'string', maxLength: 200 },
-                        tools: { type: 'string', maxLength: 100 },
-                        archive: { type: 'string', minLength: 1, maxLength: 100 },
-                        screenshot: { type: 'string', minLength: 1, maxLength: 100 },
+                        title: { type: 'string', minLength: 1, maxLength: CONSTS.ENTRY_GAME_TITLE_MAX_LENGTH },
+                        genre: { type: 'string', maxLength: CONSTS.ENTRY_GAME_GENRE_MAX_LENGTH },
+                        description: { type: 'string', maxLength: CONSTS.ENTRY_GAME_DESCRIPTION_MAX_LENGTH },
+                        tools: { type: 'string', maxLength: CONSTS.ENTRY_GAME_TOOLS_MAX_LENGTH },
+                        archive: { type: 'string', minLength: 1, maxLength: CONSTS.ENTRY_GAME_ARCHIVE_LINK_MAX_LENGTH },
+                        screenshot: { type: 'string', minLength: 1, maxLength: CONSTS.ENTRY_GAME_SCREENSHOT_LINK_MAX_LENGTH },
                     },
                     additionalProperties: false,
                 },
-                comment: { type: 'string', maxLength: 200 },
+                comment: { type: 'string', maxLength: CONSTS.ENTRY_COMMENT_MAX_LENGTH },
             },
             additionalProperties: false,
         },
