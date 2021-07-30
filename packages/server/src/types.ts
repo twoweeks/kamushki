@@ -12,29 +12,33 @@ export type SendFormTimesType = {
     open_after: number;
 };
 
-export type GameItemType = {
-    _id: string;
-    contest: number;
-    stage: GameStageType;
+export type GameType = {
     title: string;
-    email: string;
     genre: string;
     description: string;
     tools: string;
     archive: string;
     screenshot: string;
+};
+
+export type GameEntryType = {
+    _id: string;
+    contest: number;
+    stage: GameStageType;
+    email: string;
+    gameInfo: GameType;
+    comment: string;
     date: string;
 };
 
-export type SendFormQueryParamsType = {
-    gameInfo: Omit<GameItemType, '_id' | 'contest' | 'stage' | 'date'>;
+export type SendEntryQueryParamsType = Pick<GameEntryType, 'email' | 'gameInfo' | 'comment'> & {
     captcha: string;
 };
 
-export type SendedGameStatusType = 'success' | 'form_closed' | 'wrong_captcha';
+export type SendEntryFormStatusType = 'success' | 'form_closed' | 'wrong_captcha';
 
-export type SendFormResponseType = {
-    status: SendedGameStatusType;
+export type SendEntryQueryResponseType = {
+    status: SendEntryFormStatusType;
 };
 
 export type LoginQueryParamsType = {
@@ -44,12 +48,12 @@ export type LoginQueryParamsType = {
 
 export type ContestsQueryResponseType = number[];
 
-export type GamesQueryParamsType = {
+export type EntriesQueryParamsType = {
     contest?: number;
 };
 
-export type GamesQueryResponseType = GameItemType[];
+export type EntriesQueryResponseType = GameEntryType[];
 
-export type EditGameInfoQueryParamsType = Omit<GameItemType, 'contest' | 'stage' | 'date'>;
+export type EditEntryInfoQueryParamsType = Pick<GameEntryType, '_id' | 'email' | 'gameInfo' | 'comment'>;
 
-export type DeleteGamesQueryParamsType = string[];
+export type DeleteEntriesQueryParamsType = string[];

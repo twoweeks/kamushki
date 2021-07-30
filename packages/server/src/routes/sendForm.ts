@@ -2,14 +2,14 @@ import type { FastifyPluginAsync, FastifySchema } from 'fastify';
 
 import CONFIG from '../config.js';
 
-import type { SendFormQueryParamsType, SendFormResponseType } from '../types.js';
+import type { SendEntryQueryParamsType, SendEntryQueryResponseType } from '../types.js';
 
 import getSendFormStatus from '../utils/get-send-form-status.js';
 import getGameStage from '../utils/get-game-stage.js';
 import verifyCaptcha from '../utils/verify-captcha.js';
 import { prepareString } from '../utils/prepare-string';
 
-import { addGame } from '../db/games.js';
+import { createEntry } from '../db/games.js';
 
 const Routes: FastifyPluginAsync = async (app, options) => {
     app.get('/get-status', async (req, res) => {
@@ -17,17 +17,17 @@ const Routes: FastifyPluginAsync = async (app, options) => {
         res.send(getSendFormStatus(CONFIG.send_form_times));
     });
 
-    const SendGameSchema: FastifySchema = {
+    const SendEntrySchema: FastifySchema = {
         body: {
             type: 'object',
-            required: ['gameInfo', 'captcha'],
+            required: ['email', 'gameInfo', 'captcha'],
             properties: {
+                email: { type: 'string', minLength: 1, maxLength: 50 },
                 gameInfo: {
                     type: 'object',
-                    required: ['title', 'email', 'archive', 'screenshot'],
+                    required: ['title', 'archive', 'screenshot'],
                     properties: {
                         title: { type: 'string', minLength: 1, maxLength: 100 },
-                        email: { type: 'string', minLength: 1, maxLength: 50 },
                         genre: { type: 'string', maxLength: 50 },
                         description: { type: 'string', maxLength: 200 },
                         tools: { type: 'string', maxLength: 100 },
@@ -36,17 +36,19 @@ const Routes: FastifyPluginAsync = async (app, options) => {
                     },
                     additionalProperties: false,
                 },
+                comment: { type: 'string', maxLength: 200 },
                 captcha: { type: 'string', minLength: 1 },
             },
+            additionalProperties: false,
         },
     };
 
-    app.put('/send-game', { schema: SendGameSchema }, async (req, res) => {
-        const RequestBody = req.body as SendFormQueryParamsType;
+    app.put('/send-entry', { schema: SendEntrySchema }, async (req, res) => {
+        const RequestBody = req.body as SendEntryQueryParamsType;
 
         const GameStage = getGameStage(CONFIG.send_form_times);
 
-        const ResponseBody: SendFormResponseType = {
+        const ResponseBody: SendEntryQueryResponseType = {
             status: 'success',
         };
 
@@ -65,14 +67,19 @@ const Routes: FastifyPluginAsync = async (app, options) => {
         }
 
         Object.keys(RequestBody.gameInfo).forEach(_key => {
-            const key = _key as keyof SendFormQueryParamsType['gameInfo'];
+            const key = _key as keyof SendEntryQueryParamsType['gameInfo'];
             RequestBody.gameInfo[key] = prepareString(RequestBody.gameInfo[key]);
         });
 
-        await addGame({
-            ...RequestBody.gameInfo,
+        RequestBody.email = prepareString(RequestBody.email);
+        RequestBody.comment = prepareString(RequestBody.comment);
+
+        await createEntry({
             contest: CONFIG.contest.number,
             stage: GameStage ?? 'demo',
+            email: RequestBody.email,
+            gameInfo: { ...RequestBody.gameInfo },
+            comment: RequestBody.comment,
             date: new Date().toISOString(),
         });
 

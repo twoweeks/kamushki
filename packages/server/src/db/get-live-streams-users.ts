@@ -10,15 +10,18 @@ export const getTwitchUsers = async (): Promise<string[]> => {
 
     return new Promise((resolve, reject) => {
         mongoClient.connect((err, client) => {
-            if (err) reject(err);
+            if (err || !client) {
+                reject(err);
+                return;
+            }
 
             const db = client.db(DB_NAME);
             const collection = db.collection(COLLECTION_NAME);
 
             collection.find().toArray(function (err, results) {
-                const UserLogins = results.map(UserLoginEntry => UserLoginEntry.userName);
-                resolve(UserLogins);
+                const UserLogins: string[] = (results ?? []).map(UserLoginEntry => UserLoginEntry.userName);
                 client.close();
+                resolve(UserLogins);
             });
         });
     });

@@ -6,7 +6,7 @@ import CONFIG from '../config.js';
 const { MongoClient, ObjectId } = mongodb;
 
 export const createMongoClient = (): MongoClientType => {
-    return new MongoClient(CONFIG.server.db_connection_string, { useUnifiedTopology: true });
+    return new MongoClient(CONFIG.server.db_connection_string);
 };
 
 export { ObjectId };
