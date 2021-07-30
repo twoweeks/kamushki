@@ -20,7 +20,7 @@ const StatusModalContainer: React.FC = () => {
     useEffect(() => {
         NodeRef.current = document.createElement('div');
 
-        NodeRef.current.classList.add('modal__root');
+        NodeRef.current.classList.add('modal');
 
         document.body.appendChild(NodeRef.current);
 
