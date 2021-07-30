@@ -1,26 +1,26 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 
-import type { DeleteGamesQueryParamsType } from '../../../../api/types/gamesTypes';
+import type { DeleteEntriesQueryParamsType } from '../../../../api/services/gamesService/types';
 import type { AdminGamesPageStateType, GamesCountObjectType } from '../GamesPageTypes';
 
 import { Link } from '../../../common';
 
 import './GamesPage.scss';
 
-type PropsType = Pick<AdminGamesPageStateType['Data'], 'ContestsData' | 'GamesData'> & {
+type PropsType = Pick<AdminGamesPageStateType['Data'], 'ContestsData' | 'EntriesData'> & {
     IsDataPending: boolean;
-    GamesCount: GamesCountObjectType;
+    EntriesCount: GamesCountObjectType;
     SelectedContest: number;
     StageFilterValue: AdminGamesPageStateType['Filters']['Stage'];
     handleSelectedContestChange: (consestNum: number) => void;
     handleGamesStageFilterChange: (stage: AdminGamesPageStateType['Filters']['Stage']) => void;
-    handleGamesEditButtonClick: (gameID: AdminGamesPageStateType['EditableGameID']) => void;
-    handleDeleteGamesButtonClick: (gamesID: DeleteGamesQueryParamsType) => void;
+    handleGamesEditButtonClick: (entryID: AdminGamesPageStateType['EditableEntryID']) => void;
+    handleDeleteGamesButtonClick: (entriesID: DeleteEntriesQueryParamsType) => void;
     handleExport: () => void;
 };
 
 const GamesPage: React.FC<PropsType> = props => {
-    const { GamesData, ContestsData, IsDataPending, GamesCount } = props;
+    const { EntriesData, ContestsData, IsDataPending, EntriesCount } = props;
     const { SelectedContest, handleSelectedContestChange } = props;
     const { StageFilterValue, handleGamesStageFilterChange } = props;
     const { handleGamesEditButtonClick, handleDeleteGamesButtonClick } = props;
@@ -29,19 +29,23 @@ const GamesPage: React.FC<PropsType> = props => {
     const [RemovableGamesList, setRemovableGamesList] = useState<string[]>([]);
 
     const hadleGameCheckboxClick = useCallback(
-        (gameID: string) => {
+        (entryID: string) => {
             let removableGamesListCopy = [...RemovableGamesList];
 
-            if (removableGamesListCopy.includes(gameID)) {
-                removableGamesListCopy = removableGamesListCopy.filter(GameID => GameID !== gameID);
+            if (removableGamesListCopy.includes(entryID)) {
+                removableGamesListCopy = removableGamesListCopy.filter(GameID => GameID !== entryID);
             } else {
-                removableGamesListCopy.push(gameID);
+                removableGamesListCopy.push(entryID);
             }
 
             setRemovableGamesList(removableGamesListCopy);
         },
         [handleDeleteGamesButtonClick, RemovableGamesList]
     );
+
+    useEffect(() => {
+        setRemovableGamesList([]);
+    }, [EntriesData]);
 
     const parseLink = useCallback((linkHref: string, linkText: string) => {
         let text = <></>;
@@ -115,9 +119,9 @@ const GamesPage: React.FC<PropsType> = props => {
                         id="stage_filter"
                         value={StageFilterValue}
                         onChange={event => handleGamesStageFilterChange(event.target.value as typeof StageFilterValue)}>
-                        <option value="all">все игры ({GamesCount.all})</option>
-                        <option value="demo">только демоверсии ({GamesCount.demo})</option>
-                        <option value="final">только финальные версии ({GamesCount.final})</option>
+                        <option value="all">все игры ({EntriesCount.all})</option>
+                        <option value="demo">только демоверсии ({EntriesCount.demo})</option>
+                        <option value="final">только финальные версии ({EntriesCount.final})</option>
                     </select>
                 </form>
                 <form onSubmit={commonFormSubmitHandler}>
@@ -135,45 +139,54 @@ const GamesPage: React.FC<PropsType> = props => {
                     <tr>
                         <th className={getColumnClassName('checkbox')}></th>
                         <th>Название</th>
-                        <th className={getColumnClassName('email')}>Почта автора</th>
+                        <th className={getColumnClassName('email')}>Почта участника</th>
                         <th>Стадия</th>
                         <th>Дата</th>
-                        <th>Жанр</th>
-                        <th>Описание</th>
-                        <th>Инструменты</th>
+                        <th>Данные</th>
+                        <th>Комментарий</th>
                         <th>Ссылки</th>
                         <th className={getColumnClassName('options')}>Опции</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {GamesData.map(GameInfo => (
-                        <tr key={GameInfo._id}>
+                    {EntriesData.map(EntryData => (
+                        <tr key={EntryData._id}>
                             <td className={getColumnClassName('checkbox')}>
                                 <form onSubmit={commonFormSubmitHandler}>
                                     <label htmlFor="delete" hidden>
-                                        Пометить игру <q>{GameInfo.title}</q> на массовое удаление
+                                        Пометить игру <q>{EntryData.gameInfo.title}</q> на массовое удаление
                                     </label>
-                                    <input id="delete" type="checkbox" onChange={() => hadleGameCheckboxClick(GameInfo._id)} />
+                                    <input
+                                        id="delete"
+                                        type="checkbox"
+                                        checked={RemovableGamesList.includes(EntryData._id)}
+                                        onChange={() => hadleGameCheckboxClick(EntryData._id)}
+                                    />
                                 </form>
                             </td>
-                            <td>{GameInfo.title}</td>
-                            <td className={getColumnClassName('email')}>{parseEmail(GameInfo.email)}</td>
-                            <td>{GameInfo.stage}</td>
-                            <td>{parseDate(GameInfo.date)}</td>
-                            <td>{GameInfo.genre}</td>
-                            <td>{GameInfo.description}</td>
-                            <td>{GameInfo.tools}</td>
+                            <td>{EntryData.gameInfo.title}</td>
+                            <td className={getColumnClassName('email')}>{parseEmail(EntryData.email)}</td>
+                            <td>{EntryData.stage}</td>
+                            <td>{parseDate(EntryData.date)}</td>
                             <td>
-                                {parseLink(GameInfo.archive, 'архив')}
+                                Жанр: {EntryData.gameInfo.genre}
                                 <br />
-                                {parseLink(GameInfo.screenshot, 'скриншот')}
+                                Описание: {EntryData.gameInfo.description}
+                                <br />
+                                Инструменты: {EntryData.gameInfo.tools}
+                            </td>
+                            <td>{EntryData.comment}</td>
+                            <td>
+                                {parseLink(EntryData.gameInfo.archive, 'архив')}
+                                <br />
+                                {parseLink(EntryData.gameInfo.screenshot, 'скриншот')}
                             </td>
                             <td className={getColumnClassName('options')}>
                                 <form onSubmit={commonFormSubmitHandler} className="adminGamesPage__options">
-                                    <button onClick={() => handleGamesEditButtonClick(GameInfo._id)} title="Отредактировать информацию об игре">
+                                    <button onClick={() => handleGamesEditButtonClick(EntryData._id)} title="Отредактировать информацию об игре">
                                         📝
                                     </button>
-                                    <button onClick={() => handleDeleteGamesButtonClick([GameInfo._id])} title="Удалить игру">
+                                    <button onClick={() => handleDeleteGamesButtonClick([EntryData._id])} title="Удалить игру">
                                         🗑️
                                     </button>
                                 </form>
@@ -183,13 +196,13 @@ const GamesPage: React.FC<PropsType> = props => {
 
                     {IsDataPending ? (
                         <tr>
-                            <td colSpan={10}>загрузка...</td>
+                            <td colSpan={9}>загрузка...</td>
                         </tr>
                     ) : null}
 
-                    {!IsDataPending && GamesData.length === 0 ? (
+                    {!IsDataPending && EntriesData.length === 0 ? (
                         <tr>
-                            <td colSpan={10}>Игр нет :(</td>
+                            <td colSpan={9}>Игр нет :(</td>
                         </tr>
                     ) : null}
                 </tbody>

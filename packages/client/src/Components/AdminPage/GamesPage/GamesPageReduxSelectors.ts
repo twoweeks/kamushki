@@ -21,46 +21,50 @@ export const getIsContestsDataPending = createSelector<
     IsContestsDataPending => IsContestsDataPending
 );
 
-export const getGamesData = createSelector<RootStateType, AdminGamesPageStateType['Data']['GamesData'], AdminGamesPageStateType['Data']['GamesData']>(
-    state => state.adminGamesPage.Data.GamesData,
-    GamesData => GamesData
+export const getEntriesData = createSelector<
+    RootStateType,
+    AdminGamesPageStateType['Data']['EntriesData'],
+    AdminGamesPageStateType['Data']['EntriesData']
+>(
+    state => state.adminGamesPage.Data.EntriesData,
+    EntriesData => EntriesData
 );
 
-export const getIsGamesDataPending = createSelector<
+export const getIsEntriesDataPending = createSelector<
     RootStateType,
-    AdminGamesPageStateType['Data']['IsGamesDataPending'],
-    AdminGamesPageStateType['Data']['IsGamesDataPending']
+    AdminGamesPageStateType['Data']['IsEntriesDataPending'],
+    AdminGamesPageStateType['Data']['IsEntriesDataPending']
 >(
-    state => state.adminGamesPage.Data.IsGamesDataPending,
-    IsGamesDataPending => IsGamesDataPending
+    state => state.adminGamesPage.Data.IsEntriesDataPending,
+    IsEntriesDataPending => IsEntriesDataPending
 );
 
 export const getIsDataPending = createSelector<
     RootStateType,
     AdminGamesPageStateType['Data']['IsContestsDataPending'],
-    AdminGamesPageStateType['Data']['IsGamesDataPending'],
+    AdminGamesPageStateType['Data']['IsEntriesDataPending'],
     boolean
->(getIsContestsDataPending, getIsGamesDataPending, (IsContestsDataPending, IsGamesDataPending) => IsContestsDataPending || IsGamesDataPending);
+>(getIsContestsDataPending, getIsEntriesDataPending, (IsContestsDataPending, IsEntriesDataPending) => IsContestsDataPending || IsEntriesDataPending);
 
-export const getGamesCount = createSelector<RootStateType, AdminGamesPageStateType['Data']['GamesData'], GamesCountObjectType>(
-    getGamesData,
-    GamesData => {
-        const DemoGames = GamesData.filter(GameInfo => GameInfo.stage === 'demo');
+export const getEntriesCount = createSelector<RootStateType, AdminGamesPageStateType['Data']['EntriesData'], GamesCountObjectType>(
+    getEntriesData,
+    EntriesData => {
+        const DemoEntries = EntriesData.filter(EntryData => EntryData.stage === 'demo');
 
         return {
-            all: GamesData.length,
-            demo: DemoGames.length,
-            final: GamesData.length - DemoGames.length,
+            all: EntriesData.length,
+            demo: DemoEntries.length,
+            final: EntriesData.length - DemoEntries.length,
         };
     }
 );
 
-export const getSortedGamesData = createSelector<
+export const getSortedEntriesData = createSelector<
     RootStateType,
-    AdminGamesPageStateType['Data']['GamesData'],
-    AdminGamesPageStateType['Data']['GamesData']
->(getGamesData, GamesData => {
-    return [...GamesData].sort((a, b) => +new Date(b.date) - +new Date(a.date));
+    AdminGamesPageStateType['Data']['EntriesData'],
+    AdminGamesPageStateType['Data']['EntriesData']
+>(getEntriesData, EntriesData => {
+    return [...EntriesData].sort((a, b) => +new Date(b.date) - +new Date(a.date));
 });
 
 export const getStageFilterValue = createSelector<
@@ -72,29 +76,33 @@ export const getStageFilterValue = createSelector<
     StageFilterValue => StageFilterValue
 );
 
-export const getFiltredGamesData = createSelector<
+export const getFiltredEntriesData = createSelector<
     RootStateType,
-    AdminGamesPageStateType['Data']['GamesData'],
+    AdminGamesPageStateType['Data']['EntriesData'],
     AdminGamesPageStateType['Filters']['Stage'],
-    AdminGamesPageStateType['Data']['GamesData']
->(getSortedGamesData, getStageFilterValue, (GamesData, StageFilterValue) => {
+    AdminGamesPageStateType['Data']['EntriesData']
+>(getSortedEntriesData, getStageFilterValue, (EntriesData, StageFilterValue) => {
     switch (StageFilterValue) {
         case 'demo':
         case 'final':
-            return GamesData.filter(GameInfo => GameInfo.stage === StageFilterValue);
+            return EntriesData.filter(EntryData => EntryData.stage === StageFilterValue);
         default:
-            return GamesData;
+            return EntriesData;
     }
 });
 
-export const getEditableGameID = createSelector<RootStateType, AdminGamesPageStateType['EditableGameID'], AdminGamesPageStateType['EditableGameID']>(
-    state => state.adminGamesPage.EditableGameID,
+export const getEditableEntryID = createSelector<
+    RootStateType,
+    AdminGamesPageStateType['EditableEntryID'],
+    AdminGamesPageStateType['EditableEntryID']
+>(
+    state => state.adminGamesPage.EditableEntryID,
     EditableGameID => EditableGameID
 );
 
-export const getEditableGameInfo = createSelector<
+export const getEditableEntryData = createSelector<
     RootStateType,
-    AdminGamesPageStateType['Data']['GamesData'],
-    AdminGamesPageStateType['EditableGameID'],
-    AdminGamesPageStateType['Data']['GamesData'][0] | undefined
->(getGamesData, getEditableGameID, (GamesData, EditableGameID) => GamesData.find(GameInfo => GameInfo._id === EditableGameID));
+    AdminGamesPageStateType['Data']['EntriesData'],
+    AdminGamesPageStateType['EditableEntryID'],
+    AdminGamesPageStateType['Data']['EntriesData'][0] | undefined
+>(getEntriesData, getEditableEntryID, (EntriesData, EditableEntryID) => EntriesData.find(EntryData => EntryData._id === EditableEntryID));

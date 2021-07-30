@@ -1,4 +1,11 @@
 .adminGamesPage__editGameInfoModal {
+    form {
+        padding: 10px;
+        margin: 20px 0;
+
+        background-color: #fff;
+    }
+
     &__formItem {
         $i: &;
 

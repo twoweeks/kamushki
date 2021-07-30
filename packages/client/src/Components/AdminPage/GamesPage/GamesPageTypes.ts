@@ -1,16 +1,16 @@
-import { ContestsQueryResponseType, GamesQueryResponseType } from '../../../api/types/gamesTypes';
+import { ContestsQueryResponseType, EntriesQueryResponseType } from '../../../api/services/gamesService/types';
 
 export type AdminGamesPageStateType = {
     Data: {
         ContestsData: ContestsQueryResponseType;
         IsContestsDataPending: boolean;
-        GamesData: GamesQueryResponseType;
-        IsGamesDataPending: boolean;
+        EntriesData: EntriesQueryResponseType;
+        IsEntriesDataPending: boolean;
     };
     Filters: {
         Stage: 'all' | 'demo' | 'final';
     };
-    EditableGameID: string;
+    EditableEntryID: string;
 };
 
 export type GamesCountObjectType = {

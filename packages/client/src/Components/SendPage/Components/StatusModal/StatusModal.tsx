@@ -4,12 +4,12 @@ import { SendPageStateType } from '../../SendPageTypes';
 
 import './StatusModal.scss';
 
-type PropsType = Pick<SendPageStateType, 'SendedGameStatus'> & {
+type PropsType = Pick<SendPageStateType, 'SendedEntryStatus'> & {
     handleModalClose: () => void;
 };
 
 const StatusModal: React.FC<PropsType> = props => {
-    const { SendedGameStatus } = props;
+    const { SendedEntryStatus } = props;
     const { handleModalClose } = props;
 
     const BaseClassName = useRef('sendPage__statusModal');
@@ -17,7 +17,7 @@ const StatusModal: React.FC<PropsType> = props => {
 
     return (
         <div className={`modal__content ${BaseClassName.current}`}>
-            {SendedGameStatus === 'success' ? (
+            {SendedEntryStatus === 'success' ? (
                 <>
                     <p>
                         <strong>Игра успешно отправлена</strong>
@@ -29,7 +29,7 @@ const StatusModal: React.FC<PropsType> = props => {
                 </>
             ) : null}
 
-            {SendedGameStatus === 'wrong_captcha' ? (
+            {SendedEntryStatus === 'wrong_captcha' ? (
                 <>
                     <p>
                         <strong>Капча не пройдена</strong>
@@ -41,7 +41,7 @@ const StatusModal: React.FC<PropsType> = props => {
                 </>
             ) : null}
 
-            {SendedGameStatus === 'wrong_data' ? (
+            {SendedEntryStatus === 'wrong_data' ? (
                 <>
                     <p>
                         <strong>Неправильные данные</strong>
@@ -53,7 +53,7 @@ const StatusModal: React.FC<PropsType> = props => {
                 </>
             ) : null}
 
-            {SendedGameStatus === 'form_closed' ? (
+            {SendedEntryStatus === 'form_closed' ? (
                 <>
                     <p>
                         <strong>Форма закрыта</strong>
@@ -65,7 +65,7 @@ const StatusModal: React.FC<PropsType> = props => {
                 </>
             ) : null}
 
-            {SendedGameStatus === 'unknown' ? (
+            {SendedEntryStatus === 'unknown' ? (
                 <>
                     <p>
                         <strong>Неизвестная ошибка</strong>

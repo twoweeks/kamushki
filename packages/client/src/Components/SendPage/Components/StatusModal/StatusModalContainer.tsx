@@ -4,12 +4,12 @@ import { useSelector, useDispatch } from 'react-redux';
 
 import { resetSendedGameStatus } from '../../SendPageReduxSlice';
 
-import { getSendedGameStatus } from '../../SendPageReduxSelectors';
+import { getSendedEntryStatus } from '../../SendPageReduxSelectors';
 
 import StatusModal from './StatusModal';
 
 const StatusModalContainer: React.FC = () => {
-    const SendedGameStatus = useSelector(getSendedGameStatus);
+    const SendedEntryStatus = useSelector(getSendedEntryStatus);
 
     const dispatch = useDispatch();
 
@@ -41,7 +41,7 @@ const StatusModalContainer: React.FC = () => {
         dispatch(resetSendedGameStatus());
     }, []);
 
-    return IsVisible && NodeRef.current ? createPortal(<StatusModal {...{ SendedGameStatus }} {...{ handleModalClose }} />, NodeRef.current) : null;
+    return IsVisible && NodeRef.current ? createPortal(<StatusModal {...{ SendedEntryStatus }} {...{ handleModalClose }} />, NodeRef.current) : null;
 };
 
 export default StatusModalContainer;

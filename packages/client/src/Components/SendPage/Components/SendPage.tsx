@@ -3,15 +3,15 @@ import { ReCaptchaV2 as ReCaptcha, EReCaptchaV2Size } from 'react-recaptcha-x';
 
 import CONFIG from '../../../config';
 
-import type { SendFormQueryParamsType } from '../../../api/types/sendFormTypes';
+import type { SendEntryQueryParamsType } from '../../../api/services/sensFormService/types';
 import type { SendPageStateType, FormDataStorageItemType } from '../SendPageTypes';
 
 import { TextInput, CheckboxInput, Link } from '../../common';
 import './SendPage.scss';
 
 type PropsType = Pick<SendPageStateType, 'FormStatus' | 'IsFormStatusPending'> & {
-    formDataHandler: (data: SendFormQueryParamsType) => void;
-    getFormDataStorageItemValue: (field: keyof FormDataStorageItemType) => string | undefined;
+    formDataHandler: (data: SendEntryQueryParamsType) => void;
+    getFormDataStorageItemValue: (field: keyof FormDataStorageItemType['gameInfo']) => string | undefined;
 };
 
 const SendPage: React.FC<PropsType> = props => {
@@ -25,8 +25,10 @@ const SendPage: React.FC<PropsType> = props => {
         event.preventDefault();
 
         const _formData = new FormData(event.target as HTMLFormElement);
-        const SendFormData = Object.fromEntries(_formData) as SendFormQueryParamsType['gameInfo'] & {
-            captcha?: SendFormQueryParamsType['captcha'];
+        const SendFormData = Object.fromEntries(_formData) as SendEntryQueryParamsType['gameInfo'] & {
+            email: SendEntryQueryParamsType['email'];
+            comment: SendEntryQueryParamsType['comment'];
+            captcha?: SendEntryQueryParamsType['captcha'];
             ready?: 'on' | 'off';
         };
 
@@ -40,31 +42,24 @@ const SendPage: React.FC<PropsType> = props => {
             return;
         }
 
-        const GameInfo = { ...SendFormData };
-
-        // удаляем лишние поля (мало ли)
-
-        const RequiredFields: (keyof SendFormQueryParamsType['gameInfo'])[] = [
-            'title',
-            'email',
-            'genre',
-            'description',
-            'tools',
-            'archive',
-            'screenshot',
-        ];
-
-        Object.keys(GameInfo).forEach(_key => {
-            const key = _key as keyof SendFormQueryParamsType['gameInfo'];
-            if (!RequiredFields.includes(key)) delete GameInfo[key];
-        });
-
-        if (!GameInfo.title || !GameInfo.email || !GameInfo.archive || !GameInfo.screenshot) {
+        if (!SendFormData.title || !SendFormData.email || !SendFormData.archive || !SendFormData.screenshot) {
             alert('Не заполнены обязательные поля');
             return;
         }
 
-        formDataHandler({ gameInfo: GameInfo, captcha: SendFormData.captcha });
+        formDataHandler({
+            email: SendFormData.email,
+            captcha: SendFormData.captcha,
+            comment: SendFormData.comment,
+            gameInfo: {
+                title: SendFormData.title,
+                genre: SendFormData.genre,
+                description: SendFormData.description,
+                tools: SendFormData.tools,
+                archive: SendFormData.archive,
+                screenshot: SendFormData.screenshot,
+            },
+        });
     }, []);
 
     const BaseClassName = useRef('sendPage');
@@ -104,7 +99,7 @@ const SendPage: React.FC<PropsType> = props => {
                     label="Название игры"
                     placeholder="Ограбитель караванов 4"
                     extraText="Максимум 100 символов"
-                    defaultValue={getFormDataStorageItemValue('title')}
+                    // defaultValue={getFormDataStorageItemValue('title')}
                     maxLength={100}
                 />
 
@@ -116,7 +111,7 @@ const SendPage: React.FC<PropsType> = props => {
                     label="Почта"
                     placeholder="kirillsupergamedev@yandex.ru"
                     extraText="Укажите почту, через которую с вами можно будет связаться. Максимум 50 символов"
-                    defaultValue={getFormDataStorageItemValue('email')}
+                    // defaultValue={getFormDataStorageItemValue('email')}
                     maxLength={50}
                 />
 
@@ -126,7 +121,7 @@ const SendPage: React.FC<PropsType> = props => {
                     label="Жанр"
                     placeholder="Адвенчура"
                     extraText="Максимум 50 символов"
-                    defaultValue={getFormDataStorageItemValue('genre')}
+                    // defaultValue={getFormDataStorageItemValue('genre')}
                     maxLength={50}
                 />
 
@@ -137,7 +132,7 @@ const SendPage: React.FC<PropsType> = props => {
                     label="Описание игры"
                     placeholder="Пользователь может играть лесными эльфами, охраной дворца и злодеем. И если пользователь играет эльфами то эльфы в лесу, домики деревяные набигают солдаты дворца и злодеи. Можно грабить корованы..."
                     extraText="Максимум 200 символов, без переносов на новую строку"
-                    defaultValue={getFormDataStorageItemValue('description')}
+                    // defaultValue={getFormDataStorageItemValue('description')}
                     maxLength={200}
                     inputStyle={{ height: 100 }}
                 />
@@ -149,7 +144,7 @@ const SendPage: React.FC<PropsType> = props => {
                     label="Инструменты"
                     placeholder="Unity, Blender, Paint"
                     extraText="Максимум 100 символов, без переносов на новую строку"
-                    defaultValue={getFormDataStorageItemValue('tools')}
+                    // defaultValue={getFormDataStorageItemValue('tools')}
                     maxLength={100}
                 />
 
@@ -173,6 +168,17 @@ const SendPage: React.FC<PropsType> = props => {
                     placeholder="https://i.imgur.com"
                     extraText="Рекомендуется использовать Imgur или VK. Максимум 100 символов"
                     maxLength={100}
+                />
+
+                <TextInput
+                    className={BaseInputClassName.current}
+                    id="comment"
+                    type="textarea"
+                    label="Комментарий для организатора"
+                    placeholder="пыщь пыщь"
+                    extraText="Будет виден только организатору. Максимум 200 символов, без переносов на новую строку"
+                    maxLength={200}
+                    inputStyle={{ height: 100 }}
                 />
 
                 <CheckboxInput

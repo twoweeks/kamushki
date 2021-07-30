@@ -2,15 +2,15 @@ import React, { useRef, useState, useEffect, useCallback } from 'react';
 import { createPortal } from 'react-dom';
 import { useSelector, useDispatch } from 'react-redux';
 
-import { editGameInfoThunk } from '../../GamesPageReduxSlice';
-import { resetEditableGameID } from '../../GamesPageReduxSlice';
+import { editEntryInfoThunk } from '../../GamesPageReduxSlice';
+import { resetEditableEntryID } from '../../GamesPageReduxSlice';
 
-import { getEditableGameInfo } from '../../GamesPageReduxSelectors';
+import { getEditableEntryData } from '../../GamesPageReduxSelectors';
 
 import EditGameInfoModal from './EditGameInfoModal';
 
 const EditGameInfoModalContainer: React.FC = () => {
-    const EditableGameInfo = useSelector(getEditableGameInfo);
+    const EditableEntryData = useSelector(getEditableEntryData);
 
     const dispatch = useDispatch();
 
@@ -21,7 +21,7 @@ const EditGameInfoModalContainer: React.FC = () => {
     useEffect(() => {
         NodeRef.current = document.createElement('div');
 
-        NodeRef.current.classList.add('modal__root');
+        NodeRef.current.classList.add('modal');
 
         document.body.appendChild(NodeRef.current);
 
@@ -39,15 +39,15 @@ const EditGameInfoModalContainer: React.FC = () => {
     }, []);
 
     const handleModalClose = useCallback(() => {
-        dispatch(resetEditableGameID());
+        dispatch(resetEditableEntryID());
     }, []);
 
-    const handleFormData = useCallback((data: Parameters<typeof editGameInfoThunk>[0]) => {
-        dispatch(editGameInfoThunk(data));
+    const handleFormData = useCallback((data: Parameters<typeof editEntryInfoThunk>[0]) => {
+        dispatch(editEntryInfoThunk(data));
     }, []);
 
-    return EditableGameInfo && IsVisible && NodeRef.current
-        ? createPortal(<EditGameInfoModal {...{ EditableGameInfo }} {...{ handleFormData }} {...{ handleModalClose }} />, NodeRef.current)
+    return EditableEntryData && IsVisible && NodeRef.current
+        ? createPortal(<EditGameInfoModal {...{ EditableEntryData }} {...{ handleFormData }} {...{ handleModalClose }} />, NodeRef.current)
         : null;
 };
 

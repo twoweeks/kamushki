@@ -1,6 +1,6 @@
-import { API } from '../';
+import { API } from '../..';
 
-import type { LoginQueryParamsType } from '../types/authTypes';
+import type { LoginQueryParamsType } from './types';
 
 const Controller = 'auth';
 

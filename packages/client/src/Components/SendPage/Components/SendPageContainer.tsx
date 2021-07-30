@@ -7,9 +7,9 @@ import CONFIG from '../../../config';
 
 import type { FormDataStorageItemType } from '../SendPageTypes';
 
-import { getStatusThunk, sendGameThunk } from '../SendPageReduxSlice';
+import { getStatusThunk, sendEntryThunk } from '../SendPageReduxSlice';
 
-import { getFormStatus, getIsFormStatusPending, getSendedGameStatus } from '../SendPageReduxSelectors';
+import { getFormStatus, getIsFormStatusPending, getSendedEntryStatus } from '../SendPageReduxSelectors';
 
 import SendPage from './SendPage';
 import StatusModal from './StatusModal/StatusModalContainer';
@@ -17,7 +17,7 @@ import StatusModal from './StatusModal/StatusModalContainer';
 const SendPageContainer: React.FC = () => {
     const FormStatus = useSelector(getFormStatus);
     const IsFormStatusPending = useSelector(getIsFormStatusPending);
-    const SendedGameStatus = useSelector(getSendedGameStatus);
+    const SendedEntryStatus = useSelector(getSendedEntryStatus);
 
     const FormDataStorageItemName = useRef('send_form_data');
 
@@ -27,30 +27,32 @@ const SendPageContainer: React.FC = () => {
         dispatch(getStatusThunk());
     }, []);
 
-    const formDataHandler = useCallback((data: Parameters<typeof sendGameThunk>[0]) => {
-        dispatch(sendGameThunk(data));
+    const formDataHandler = useCallback((data: Parameters<typeof sendEntryThunk>[0]) => {
+        dispatch(sendEntryThunk(data));
 
-        const StorageData: FormDataStorageItemType = {
-            title: data.gameInfo.title,
-            email: data.gameInfo.email,
-            description: data.gameInfo.description,
-            genre: data.gameInfo.genre,
-            tools: data.gameInfo.tools,
-        };
+        // const StorageData: FormDataStorageItemType = {
+        //     email: data.email,
+        //     title: data.gameInfo.title,
+        //     description: data.gameInfo.description,
+        //     genre: data.gameInfo.genre,
+        //     tools: data.gameInfo.tools,
+        // };
 
-        localStorage.setItem(FormDataStorageItemName.current, JSON.stringify(StorageData));
+        // localStorage.setItem(FormDataStorageItemName.current, JSON.stringify(StorageData));
     }, []);
 
-    const getFormDataStorageItemValue = useCallback((field: keyof FormDataStorageItemType) => {
-        const StorageData: FormDataStorageItemType | null = JSON.parse(localStorage.getItem(FormDataStorageItemName.current) ?? 'null');
+    const getFormDataStorageItemValue = useCallback((field: keyof FormDataStorageItemType['gameInfo']) => {
+        // const StorageData: FormDataStorageItemType | null = JSON.parse(localStorage.getItem(FormDataStorageItemName.current) ?? 'null');
 
-        return StorageData ? StorageData[field] : void 0;
+        // return StorageData ? StorageData[field] : void 0;
+
+        return void 0;
     }, []);
 
     return (
         <ReCaptchaProvider siteKeyV2={CONFIG.API_KEYS.recaptcha}>
             <SendPage {...{ FormStatus, IsFormStatusPending }} {...{ formDataHandler }} {...{ getFormDataStorageItemValue }} />
-            {SendedGameStatus !== 'not_sent' ? <StatusModal /> : null}
+            {SendedEntryStatus !== 'not_sent' ? <StatusModal /> : null}
         </ReCaptchaProvider>
     );
 };

@@ -7,21 +7,21 @@ import SendFormAPI from '../../api/services/sensFormService';
 
 const ReducerName = 'sendPage';
 
-const { getStatus, sendGame } = SendFormAPI;
+const { getStatus, sendEntry } = SendFormAPI;
 
 export const getStatusThunk = createAsyncThunk(`${ReducerName}/getStatus`, async () => {
     return await getStatus();
 });
 
-export const sendGameThunk = createAsyncThunk(`${ReducerName}/sendGame`, async (params: Parameters<typeof sendGame>[0]) => {
-    return await sendGame(params);
+export const sendEntryThunk = createAsyncThunk(`${ReducerName}/sendEntry`, async (params: Parameters<typeof sendEntry>[0]) => {
+    return await sendEntry(params);
 });
 
 const InitialState: SendPageStateType = {
     FormStatus: null,
     IsFormStatusPending: false,
-    SendedGameStatus: 'not_sent',
-    IsSendGamePending: false,
+    SendedEntryStatus: 'not_sent',
+    IsSendEntryPending: false,
 };
 
 const SendPageSlice = createSlice({
@@ -29,7 +29,7 @@ const SendPageSlice = createSlice({
     initialState: InitialState,
     reducers: {
         resetSendedGameStatus: (state, action: PayloadAction<void>) => {
-            state.SendedGameStatus = InitialState.SendedGameStatus;
+            state.SendedEntryStatus = InitialState.SendedEntryStatus;
         },
     },
     extraReducers: builder => {
@@ -45,17 +45,17 @@ const SendPageSlice = createSlice({
             state.IsFormStatusPending = false;
         });
 
-        builder.addCase(sendGameThunk.pending, (state, action) => {
-            state.IsSendGamePending = true;
+        builder.addCase(sendEntryThunk.pending, (state, action) => {
+            state.IsFormStatusPending = true;
         });
-        builder.addCase(sendGameThunk.fulfilled, (state, action) => {
-            state.SendedGameStatus = action.payload.status;
-            state.IsSendGamePending = false;
+        builder.addCase(sendEntryThunk.fulfilled, (state, action) => {
+            state.SendedEntryStatus = action.payload.status;
+            state.IsFormStatusPending = false;
         });
-        builder.addCase(sendGameThunk.rejected, (state, action) => {
+        builder.addCase(sendEntryThunk.rejected, (state, action) => {
             // TODO: обработка для wrong_data
-            state.SendedGameStatus = 'unknown';
-            state.IsSendGamePending = false;
+            state.SendedEntryStatus = 'unknown';
+            state.IsFormStatusPending = false;
             console.warn(action.error);
         });
     },

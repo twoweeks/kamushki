@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import { ReCaptchaV2 as ReCaptcha, EReCaptchaV2Size } from 'react-recaptcha-x';
 
-import type { LoginQueryParamsType } from '../../../api/types/authTypes';
+import type { LoginQueryParamsType } from '../../../api/services/authService/types';
 import type { AdminLoginStateType } from '../AdminLoginTypes';
 
 import { TextInput } from '../../common';

@@ -1,13 +1,13 @@
-import { SendFormStatusResponseType, SendFormResponseType } from '../../api/types/sendFormTypes';
-import { SendFormQueryParamsType } from '../../api/types/sendFormTypes';
+import { SendFormStatusResponseType, SendEntryQueryResponseType } from '../../api/services/sensFormService/types';
+import { SendEntryQueryParamsType } from '../../api/services/sensFormService/types';
 
-export type SendedGameStatusType = SendFormResponseType['status'] | 'not_sent' | 'wrong_data' | 'unknown';
+export type SendedEntryStatusType = SendEntryQueryResponseType['status'] | 'not_sent' | 'wrong_data' | 'unknown';
 
 export type SendPageStateType = {
     FormStatus: SendFormStatusResponseType['status'] | null;
     IsFormStatusPending: boolean;
-    SendedGameStatus: SendedGameStatusType;
-    IsSendGamePending: boolean;
+    SendedEntryStatus: SendedEntryStatusType;
+    IsSendEntryPending: boolean;
 };
 
-export type FormDataStorageItemType = Omit<SendFormQueryParamsType['gameInfo'], 'archive' | 'screenshot'>;
+export type FormDataStorageItemType = Omit<SendEntryQueryParamsType, 'captcha'>;

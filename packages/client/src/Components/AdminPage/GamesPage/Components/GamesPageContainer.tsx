@@ -3,22 +3,22 @@ import { renderToString } from 'react-dom/server';
 
 import { useSelector, useDispatch } from 'react-redux';
 
-import { getContestsThunk, getGamesThunk, deleteGamesThunk } from '../GamesPageReduxSlice';
-import { setStageFIlter, setEditableGameID, resetState } from '../GamesPageReduxSlice';
+import { getContestsThunk, getEntriesThunk, deleteEntriesThunk } from '../GamesPageReduxSlice';
+import { setStageFIlter, setEditableEntryID, resetState } from '../GamesPageReduxSlice';
 
-import { getContestsData, getFiltredGamesData, getStageFilterValue } from '../GamesPageReduxSelectors';
-import { getGamesCount, getIsDataPending, getEditableGameID } from '../GamesPageReduxSelectors';
+import { getContestsData, getFiltredEntriesData, getStageFilterValue } from '../GamesPageReduxSelectors';
+import { getEntriesCount, getIsDataPending, getEditableEntryID } from '../GamesPageReduxSelectors';
 
 import GamesPage from './GamesPage';
 import EditGameInfoModal from './EditGameInfoModal/EditGameInfoModalContainer';
 
 const GamesPageContainer: React.FC = () => {
     const ContestsData = useSelector(getContestsData);
-    const GamesData = useSelector(getFiltredGamesData);
+    const EntriesData = useSelector(getFiltredEntriesData);
     const IsDataPending = useSelector(getIsDataPending);
-    const GamesCount = useSelector(getGamesCount);
+    const EntriesCount = useSelector(getEntriesCount);
     const StageFilterValue = useSelector(getStageFilterValue);
-    const EditableGameID = useSelector(getEditableGameID);
+    const EditableEntryID = useSelector(getEditableEntryID);
 
     const dispatch = useDispatch();
 
@@ -40,7 +40,7 @@ const GamesPageContainer: React.FC = () => {
 
     useEffect(() => {
         if (SelectedContest !== -1) {
-            dispatch(getGamesThunk({ contest: SelectedContest }));
+            dispatch(getEntriesThunk({ contest: SelectedContest }));
         }
     }, [SelectedContest]);
 
@@ -52,29 +52,20 @@ const GamesPageContainer: React.FC = () => {
         dispatch(setStageFIlter(stage));
     }, []);
 
-    const handleGamesEditButtonClick = useCallback((gameID: Parameters<typeof setEditableGameID>[0]) => {
-        dispatch(setEditableGameID(gameID));
+    const handleGamesEditButtonClick = useCallback((entryID: Parameters<typeof setEditableEntryID>[0]) => {
+        dispatch(setEditableEntryID(entryID));
     }, []);
 
-    const handleDeleteGamesButtonClick = useCallback((gamesID: string[]) => {
+    const handleDeleteGamesButtonClick = useCallback((entriesED: string[]) => {
         const IsConfirmed = confirm('Вы уверены?');
         if (IsConfirmed) {
-            dispatch(deleteGamesThunk(gamesID));
+            dispatch(deleteEntriesThunk(entriesED));
         }
     }, []);
 
     const handleExport = useCallback(() => {
         const DataString = JSON.stringify(
-            [...GamesData]
-                .sort((a, b) => +new Date(a.date) - +new Date(b.date))
-                .map(GameInfo => ({
-                    title: GameInfo.title,
-                    genre: GameInfo.genre,
-                    description: GameInfo.description,
-                    tools: GameInfo.tools,
-                    archive: GameInfo.archive,
-                    screenshot: GameInfo.screenshot,
-                })),
+            [...EntriesData].sort((a, b) => +new Date(a.date) - +new Date(b.date)).map(EntryData => EntryData.gameInfo),
             null,
             '  '
         );
@@ -93,18 +84,18 @@ const GamesPageContainer: React.FC = () => {
                 />
             );
         }
-    }, [GamesData]);
+    }, [EntriesData]);
 
     return (
         <>
             <GamesPage
-                {...{ ContestsData, GamesData, IsDataPending, GamesCount }}
+                {...{ ContestsData, EntriesData, IsDataPending, EntriesCount }}
                 {...{ SelectedContest, handleSelectedContestChange }}
                 {...{ StageFilterValue, handleGamesStageFilterChange }}
                 {...{ handleGamesEditButtonClick, handleDeleteGamesButtonClick }}
                 {...{ handleExport }}
             />
-            {EditableGameID !== '' ? <EditGameInfoModal /> : null}
+            {EditableEntryID !== '' ? <EditGameInfoModal /> : null}
         </>
     );
 };
