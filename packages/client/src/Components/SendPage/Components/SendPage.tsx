@@ -1,6 +1,8 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { ReCaptchaV2 as ReCaptcha, EReCaptchaV2Size } from 'react-recaptcha-x';
 
+import * as CONSTS from '@twoweeks/twg20-web-server/src/consts';
+
 import CONFIG from '../../../config';
 
 import type { SendEntryQueryParamsType } from '../../../api/services/sensFormService/types';
@@ -98,9 +100,9 @@ const SendPage: React.FC<PropsType> = props => {
                     id="title"
                     label="Название игры"
                     placeholder="Ограбитель караванов 4"
-                    extraText="Максимум 100 символов"
+                    extraText={`Максимум ${CONSTS.ENTRY_GAME_TITLE_MAX_LENGTH} символов`}
                     // defaultValue={getFormDataStorageItemValue('title')}
-                    maxLength={100}
+                    maxLength={CONSTS.ENTRY_GAME_TITLE_MAX_LENGTH}
                 />
 
                 <TextInput
@@ -110,9 +112,9 @@ const SendPage: React.FC<PropsType> = props => {
                     type="email"
                     label="Почта"
                     placeholder="kirillsupergamedev@yandex.ru"
-                    extraText="Укажите почту, через которую с вами можно будет связаться. Максимум 50 символов"
+                    extraText={`Укажите почту, через которую с вами можно будет связаться. Максимум ${CONSTS.ENTRY_EMAIL_MAX_LENGTH} символов`}
                     // defaultValue={getFormDataStorageItemValue('email')}
-                    maxLength={50}
+                    maxLength={CONSTS.ENTRY_EMAIL_MAX_LENGTH}
                 />
 
                 <TextInput
@@ -120,9 +122,9 @@ const SendPage: React.FC<PropsType> = props => {
                     id="genre"
                     label="Жанр"
                     placeholder="Адвенчура"
-                    extraText="Максимум 50 символов"
+                    extraText={`Максимум ${CONSTS.ENTRY_GAME_GENRE_MAX_LENGTH} символов`}
                     // defaultValue={getFormDataStorageItemValue('genre')}
-                    maxLength={50}
+                    maxLength={CONSTS.ENTRY_GAME_GENRE_MAX_LENGTH}
                 />
 
                 <TextInput
@@ -131,9 +133,9 @@ const SendPage: React.FC<PropsType> = props => {
                     type="textarea"
                     label="Описание игры"
                     placeholder="Пользователь может играть лесными эльфами, охраной дворца и злодеем. И если пользователь играет эльфами то эльфы в лесу, домики деревяные набигают солдаты дворца и злодеи. Можно грабить корованы..."
-                    extraText="Максимум 200 символов, без переносов на новую строку"
+                    extraText={`Максимум ${CONSTS.ENTRY_GAME_DESCRIPTION_MAX_LENGTH} символов, без переносов на новую строку`}
                     // defaultValue={getFormDataStorageItemValue('description')}
-                    maxLength={200}
+                    maxLength={CONSTS.ENTRY_GAME_DESCRIPTION_MAX_LENGTH}
                     inputStyle={{ height: 100 }}
                 />
 
@@ -143,9 +145,9 @@ const SendPage: React.FC<PropsType> = props => {
                     type="textarea"
                     label="Инструменты"
                     placeholder="Unity, Blender, Paint"
-                    extraText="Максимум 100 символов, без переносов на новую строку"
+                    extraText={`Максимум ${CONSTS.ENTRY_GAME_TOOLS_MAX_LENGTH} символов, без переносов на новую строку`}
                     // defaultValue={getFormDataStorageItemValue('tools')}
-                    maxLength={100}
+                    maxLength={CONSTS.ENTRY_GAME_TOOLS_MAX_LENGTH}
                 />
 
                 <TextInput
@@ -155,8 +157,8 @@ const SendPage: React.FC<PropsType> = props => {
                     type="url"
                     label="Архив с игрой"
                     placeholder="https://yadi.sk"
-                    extraText="Рекомендуется использовать Яндекс.Диск, Google Drive или Microsoft OneDrive. Максимум 100 символов"
-                    maxLength={100}
+                    extraText={`Рекомендуется использовать Яндекс.Диск, Google Drive или Microsoft OneDrive. Максимум ${CONSTS.ENTRY_GAME_ARCHIVE_LINK_MAX_LENGTH} символов`}
+                    maxLength={CONSTS.ENTRY_GAME_ARCHIVE_LINK_MAX_LENGTH}
                 />
 
                 <TextInput
@@ -166,8 +168,8 @@ const SendPage: React.FC<PropsType> = props => {
                     type="url"
                     label="Скриншот/логотип игры"
                     placeholder="https://i.imgur.com"
-                    extraText="Рекомендуется использовать Imgur или VK. Максимум 100 символов"
-                    maxLength={100}
+                    extraText={`Рекомендуется использовать Imgur или imgBB. Максимум ${CONSTS.ENTRY_GAME_SCREENSHOT_LINK_MAX_LENGTH} символов`}
+                    maxLength={CONSTS.ENTRY_GAME_SCREENSHOT_LINK_MAX_LENGTH}
                 />
 
                 <TextInput
@@ -176,8 +178,8 @@ const SendPage: React.FC<PropsType> = props => {
                     type="textarea"
                     label="Комментарий для организатора"
                     placeholder="пыщь пыщь"
-                    extraText="Будет виден только организатору. Максимум 200 символов, без переносов на новую строку"
-                    maxLength={200}
+                    extraText={`Будет виден только организатору. Максимум ${CONSTS.ENTRY_COMMENT_MAX_LENGTH} символов, без переносов на новую строку`}
+                    maxLength={CONSTS.ENTRY_COMMENT_MAX_LENGTH}
                     inputStyle={{ height: 100 }}
                 />
 
