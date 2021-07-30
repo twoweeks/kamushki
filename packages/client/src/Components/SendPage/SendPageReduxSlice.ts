@@ -46,16 +46,16 @@ const SendPageSlice = createSlice({
         });
 
         builder.addCase(sendEntryThunk.pending, (state, action) => {
-            state.IsFormStatusPending = true;
+            state.IsSendEntryPending = true;
         });
         builder.addCase(sendEntryThunk.fulfilled, (state, action) => {
             state.SendedEntryStatus = action.payload.status;
-            state.IsFormStatusPending = false;
+            state.IsSendEntryPending = false;
         });
         builder.addCase(sendEntryThunk.rejected, (state, action) => {
             // TODO: обработка для wrong_data
             state.SendedEntryStatus = 'unknown';
-            state.IsFormStatusPending = false;
+            state.IsSendEntryPending = false;
             console.warn(action.error);
         });
     },
