@@ -101,7 +101,7 @@ const SendPage: React.FC<PropsType> = props => {
                     label="Название игры"
                     placeholder="Ограбитель караванов 4"
                     extraText={`Максимум ${CONSTS.ENTRY_GAME_TITLE_MAX_LENGTH} символов`}
-                    // defaultValue={getFormDataStorageItemValue('title')}
+                    defaultValue={getFormDataStorageItemValue('title')}
                     maxLength={CONSTS.ENTRY_GAME_TITLE_MAX_LENGTH}
                 />
 
@@ -113,7 +113,6 @@ const SendPage: React.FC<PropsType> = props => {
                     label="Почта"
                     placeholder="kirillsupergamedev@yandex.ru"
                     extraText={`Укажите почту, через которую с вами можно будет связаться. Максимум ${CONSTS.ENTRY_EMAIL_MAX_LENGTH} символов`}
-                    // defaultValue={getFormDataStorageItemValue('email')}
                     maxLength={CONSTS.ENTRY_EMAIL_MAX_LENGTH}
                 />
 
@@ -123,7 +122,7 @@ const SendPage: React.FC<PropsType> = props => {
                     label="Жанр"
                     placeholder="Адвенчура"
                     extraText={`Максимум ${CONSTS.ENTRY_GAME_GENRE_MAX_LENGTH} символов`}
-                    // defaultValue={getFormDataStorageItemValue('genre')}
+                    defaultValue={getFormDataStorageItemValue('genre')}
                     maxLength={CONSTS.ENTRY_GAME_GENRE_MAX_LENGTH}
                 />
 
@@ -134,7 +133,7 @@ const SendPage: React.FC<PropsType> = props => {
                     label="Описание игры"
                     placeholder="Пользователь может играть лесными эльфами, охраной дворца и злодеем. И если пользователь играет эльфами то эльфы в лесу, домики деревяные набигают солдаты дворца и злодеи. Можно грабить корованы..."
                     extraText={`Максимум ${CONSTS.ENTRY_GAME_DESCRIPTION_MAX_LENGTH} символов, без переносов на новую строку`}
-                    // defaultValue={getFormDataStorageItemValue('description')}
+                    defaultValue={getFormDataStorageItemValue('description')}
                     maxLength={CONSTS.ENTRY_GAME_DESCRIPTION_MAX_LENGTH}
                     inputStyle={{ height: 100 }}
                 />
@@ -146,7 +145,7 @@ const SendPage: React.FC<PropsType> = props => {
                     label="Инструменты"
                     placeholder="Unity, Blender, Paint"
                     extraText={`Максимум ${CONSTS.ENTRY_GAME_TOOLS_MAX_LENGTH} символов, без переносов на новую строку`}
-                    // defaultValue={getFormDataStorageItemValue('tools')}
+                    defaultValue={getFormDataStorageItemValue('tools')}
                     maxLength={CONSTS.ENTRY_GAME_TOOLS_MAX_LENGTH}
                 />
 

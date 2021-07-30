@@ -30,23 +30,15 @@ const SendPageContainer: React.FC = () => {
     const formDataHandler = useCallback((data: Parameters<typeof sendEntryThunk>[0]) => {
         dispatch(sendEntryThunk(data));
 
-        // const StorageData: FormDataStorageItemType = {
-        //     email: data.email,
-        //     title: data.gameInfo.title,
-        //     description: data.gameInfo.description,
-        //     genre: data.gameInfo.genre,
-        //     tools: data.gameInfo.tools,
-        // };
+        const StorageData: FormDataStorageItemType['gameInfo'] = data.gameInfo;
 
-        // localStorage.setItem(FormDataStorageItemName.current, JSON.stringify(StorageData));
+        localStorage.setItem(FormDataStorageItemName.current, JSON.stringify(StorageData));
     }, []);
 
     const getFormDataStorageItemValue = useCallback((field: keyof FormDataStorageItemType['gameInfo']) => {
-        // const StorageData: FormDataStorageItemType | null = JSON.parse(localStorage.getItem(FormDataStorageItemName.current) ?? 'null');
+        const StorageData: FormDataStorageItemType['gameInfo'] | null = JSON.parse(localStorage.getItem(FormDataStorageItemName.current) ?? 'null');
 
-        // return StorageData ? StorageData[field] : void 0;
-
-        return void 0;
+        return StorageData ? StorageData[field] : void 0;
     }, []);
 
     return (
