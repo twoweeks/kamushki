@@ -1,4 +1,5 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useRef } from 'react';
+import { useFormik } from 'formik';
 import { ReCaptchaV2 as ReCaptcha, EReCaptchaV2Size } from 'react-recaptcha-x';
 
 import * as CONSTS from '@twoweeks/twg20-web-server/src/consts';
@@ -13,7 +14,7 @@ import './SendPage.scss';
 
 type PropsType = Pick<SendPageStateType, 'FormStatus' | 'IsFormStatusPending'> & {
     formDataHandler: (data: SendEntryQueryParamsType) => void;
-    getFormDataStorageItemValue: (field: keyof FormDataStorageItemType['gameInfo']) => string | undefined;
+    getFormDataStorageItemValue: (field: keyof FormDataStorageItemType['gameInfo']) => string;
 };
 
 const SendPage: React.FC<PropsType> = props => {
@@ -21,48 +22,47 @@ const SendPage: React.FC<PropsType> = props => {
     const { formDataHandler } = props;
     const { getFormDataStorageItemValue } = props;
 
-    const [ReCaptchaToken, setReCaptchaToken] = useState<string>('');
+    // why "ready" is an array in formik?
+    // cause fcku u ¯\_(ツ)_/¯
 
-    const formSubmitHandler = useCallback((event: React.FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
+    const FormInitialValues = useRef<SendEntryQueryParamsType & { ready?: ('on' | 'off')[] }>({
+        email: '',
+        comment: '',
+        gameInfo: {
+            title: getFormDataStorageItemValue('title'),
+            genre: getFormDataStorageItemValue('genre'),
+            description: getFormDataStorageItemValue('description'),
+            tools: getFormDataStorageItemValue('tools'),
+            archive: '',
+            screenshot: '',
+        },
+        captcha: '',
+        ready: ['off'],
+    });
 
-        const _formData = new FormData(event.target as HTMLFormElement);
-        const SendFormData = Object.fromEntries(_formData) as SendEntryQueryParamsType['gameInfo'] & {
-            email: SendEntryQueryParamsType['email'];
-            comment: SendEntryQueryParamsType['comment'];
-            captcha?: SendEntryQueryParamsType['captcha'];
-            ready?: 'on' | 'off';
-        };
+    const FormInstance = useFormik({
+        initialValues: FormInitialValues.current,
+        onSubmit: values => {
+            if (!values.ready || (values.ready && values.ready.includes('off'))) {
+                alert('Не прочтён регламент конкурса');
+                return;
+            }
 
-        if (!SendFormData.ready || SendFormData.ready !== 'on') {
-            alert('Не прочтён регламент конкурса');
-            return;
-        }
+            if (!values.captcha) {
+                alert('Не пройдена капча');
+                return;
+            }
 
-        if (!SendFormData.captcha) {
-            alert('Не пройдена капча');
-            return;
-        }
+            if (!values.email || !values.gameInfo.title || !values.gameInfo.archive || !values.gameInfo.screenshot) {
+                alert('Не заполнены обязательные поля');
+                return;
+            }
 
-        if (!SendFormData.title || !SendFormData.email || !SendFormData.archive || !SendFormData.screenshot) {
-            alert('Не заполнены обязательные поля');
-            return;
-        }
+            delete values.ready;
 
-        formDataHandler({
-            email: SendFormData.email,
-            captcha: SendFormData.captcha,
-            comment: SendFormData.comment,
-            gameInfo: {
-                title: SendFormData.title,
-                genre: SendFormData.genre,
-                description: SendFormData.description,
-                tools: SendFormData.tools,
-                archive: SendFormData.archive,
-                screenshot: SendFormData.screenshot,
-            },
-        });
-    }, []);
+            formDataHandler(values);
+        },
+    });
 
     const BaseClassName = useRef('sendPage');
     const BaseInputClassName = useRef(`${BaseClassName.current}__formItem`);
@@ -93,15 +93,16 @@ const SendPage: React.FC<PropsType> = props => {
 
     return (
         <div className={BaseClassName.current}>
-            <form className={`${BaseClassName.current}__form`} onSubmit={formSubmitHandler}>
+            <form className={`${BaseClassName.current}__form`} onSubmit={FormInstance.handleSubmit}>
                 <TextInput
                     required
                     className={BaseInputClassName.current}
-                    id="title"
+                    id="gameInfo.title"
                     label="Название игры"
+                    value={FormInstance.values.gameInfo.title}
+                    onChange={FormInstance.handleChange}
                     placeholder="Ограбитель караванов 4"
                     extraText={`Максимум ${CONSTS.ENTRY_GAME_TITLE_MAX_LENGTH} символов`}
-                    defaultValue={getFormDataStorageItemValue('title')}
                     maxLength={CONSTS.ENTRY_GAME_TITLE_MAX_LENGTH}
                 />
 
@@ -111,6 +112,8 @@ const SendPage: React.FC<PropsType> = props => {
                     id="email"
                     type="email"
                     label="Почта"
+                    value={FormInstance.values.email}
+                    onChange={FormInstance.handleChange}
                     placeholder="kirillsupergamedev@yandex.ru"
                     extraText={`Укажите почту, через которую с вами можно будет связаться. Максимум ${CONSTS.ENTRY_EMAIL_MAX_LENGTH} символов`}
                     maxLength={CONSTS.ENTRY_EMAIL_MAX_LENGTH}
@@ -118,43 +121,48 @@ const SendPage: React.FC<PropsType> = props => {
 
                 <TextInput
                     className={BaseInputClassName.current}
-                    id="genre"
+                    id="gameInfo.genre"
                     label="Жанр"
+                    value={FormInstance.values.gameInfo.genre}
+                    onChange={FormInstance.handleChange}
                     placeholder="Адвенчура"
                     extraText={`Максимум ${CONSTS.ENTRY_GAME_GENRE_MAX_LENGTH} символов`}
-                    defaultValue={getFormDataStorageItemValue('genre')}
                     maxLength={CONSTS.ENTRY_GAME_GENRE_MAX_LENGTH}
                 />
 
                 <TextInput
                     className={BaseInputClassName.current}
-                    id="description"
+                    id="gameInfo.description"
                     type="textarea"
                     label="Описание игры"
+                    value={FormInstance.values.gameInfo.description}
+                    onTextareaChange={FormInstance.handleChange}
                     placeholder="Пользователь может играть лесными эльфами, охраной дворца и злодеем. И если пользователь играет эльфами то эльфы в лесу, домики деревяные набигают солдаты дворца и злодеи. Можно грабить корованы..."
                     extraText={`Максимум ${CONSTS.ENTRY_GAME_DESCRIPTION_MAX_LENGTH} символов, без переносов на новую строку`}
-                    defaultValue={getFormDataStorageItemValue('description')}
                     maxLength={CONSTS.ENTRY_GAME_DESCRIPTION_MAX_LENGTH}
                     inputStyle={{ height: 100 }}
                 />
 
                 <TextInput
                     className={BaseInputClassName.current}
-                    id="tools"
+                    id="gameInfo.tools"
                     type="textarea"
                     label="Инструменты"
+                    value={FormInstance.values.gameInfo.tools}
+                    onTextareaChange={FormInstance.handleChange}
                     placeholder="Unity, Blender, Paint"
                     extraText={`Максимум ${CONSTS.ENTRY_GAME_TOOLS_MAX_LENGTH} символов, без переносов на новую строку`}
-                    defaultValue={getFormDataStorageItemValue('tools')}
                     maxLength={CONSTS.ENTRY_GAME_TOOLS_MAX_LENGTH}
                 />
 
                 <TextInput
                     required
                     className={BaseInputClassName.current}
-                    id="archive"
+                    id="gameInfo.archive"
                     type="url"
                     label="Архив с игрой"
+                    value={FormInstance.values.gameInfo.archive}
+                    onChange={FormInstance.handleChange}
                     placeholder="https://yadi.sk"
                     extraText={`Рекомендуется использовать Яндекс.Диск, Google Drive или Microsoft OneDrive. Максимум ${CONSTS.ENTRY_GAME_ARCHIVE_LINK_MAX_LENGTH} символов`}
                     maxLength={CONSTS.ENTRY_GAME_ARCHIVE_LINK_MAX_LENGTH}
@@ -163,9 +171,11 @@ const SendPage: React.FC<PropsType> = props => {
                 <TextInput
                     required
                     className={BaseInputClassName.current}
-                    id="screenshot"
+                    id="gameInfo.screenshot"
                     type="url"
                     label="Скриншот/логотип игры"
+                    value={FormInstance.values.gameInfo.screenshot}
+                    onChange={FormInstance.handleChange}
                     placeholder="https://i.imgur.com"
                     extraText={`Рекомендуется использовать Imgur или imgBB. Максимум ${CONSTS.ENTRY_GAME_SCREENSHOT_LINK_MAX_LENGTH} символов`}
                     maxLength={CONSTS.ENTRY_GAME_SCREENSHOT_LINK_MAX_LENGTH}
@@ -176,6 +186,8 @@ const SendPage: React.FC<PropsType> = props => {
                     id="comment"
                     type="textarea"
                     label="Комментарий для организатора"
+                    value={FormInstance.values.comment}
+                    onTextareaChange={FormInstance.handleChange}
                     placeholder="пыщь пыщь"
                     extraText={`Будет виден только организатору. Максимум ${CONSTS.ENTRY_COMMENT_MAX_LENGTH} символов, без переносов на новую строку`}
                     maxLength={CONSTS.ENTRY_COMMENT_MAX_LENGTH}
@@ -185,6 +197,8 @@ const SendPage: React.FC<PropsType> = props => {
                 <CheckboxInput
                     required
                     className={BaseInputClassName.current}
+                    value={FormInstance.values.ready}
+                    onChange={FormInstance.handleChange}
                     id="ready"
                     label={
                         <>
@@ -197,15 +211,21 @@ const SendPage: React.FC<PropsType> = props => {
                     <ReCaptcha
                         size={EReCaptchaV2Size.Normal}
                         callback={token => {
-                            setReCaptchaToken(typeof token === 'string' ? token : '');
+                            FormInstance.setFieldValue('captcha', typeof token === 'string' ? token : '');
                         }}
                     />
                 </div>
 
-                <TextInput id="captcha" value={ReCaptchaToken} readOnly hidden required />
+                <TextInput id="captcha" value={FormInstance.values.captcha} readOnly hidden required />
 
                 <div className={`${BaseClassName.current}__submitButton`}>
-                    <button type="submit" disabled={ReCaptchaToken === ''}>
+                    <button
+                        type="submit"
+                        disabled={
+                            FormInstance.values.captcha === '' ||
+                            !FormInstance.values.ready ||
+                            (FormInstance.values.ready && FormInstance.values.ready.includes('off'))
+                        }>
                         Отправить игру
                     </button>
                 </div>
