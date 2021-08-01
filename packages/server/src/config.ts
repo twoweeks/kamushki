@@ -11,7 +11,7 @@ const SendFormTimes: SendFormTimesType = {
     demo_end: new Date('2021-07-25' + 'T' + '00:00' + TimeZone),
 
     // время окончания приёма финалок
-    final_end: new Date('2021-08-02' + 'T' + '00:00' + TimeZone),
+    final_end: new Date('2021-08-02' + 'T' + '20:00' + TimeZone),
 
     // период (в секундах), в который будет открыта форма отправки игр, до времени окончания приёма
     open_before: 3 * 24 * 60 * 60,
