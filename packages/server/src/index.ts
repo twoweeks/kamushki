@@ -28,7 +28,7 @@ app.register(FastifyHelmetPlugin, {
             frameAncestors: [`'self' ${CONFIG.contest.site}`],
             childSrc: [`'self' https://www.google.com`],
             styleSrc: [`'self' 'unsafe-inline'`],
-            scriptSrc: [`'self' 'unsafe-inline' https://www.google.com https://www.gstatic.com`],
+            scriptSrc: [`'self' 'unsafe-inline' data: https://www.google.com https://www.gstatic.com`],
         },
     },
 });
