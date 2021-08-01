@@ -1,4 +1,7 @@
-import React, { useRef, useCallback } from 'react';
+import React, { useRef } from 'react';
+import { useFormik } from 'formik';
+
+import * as CONSTS from '@twoweeks/twg20-web-server/src/consts';
 
 import type { EditEntryInfoQueryParamsType } from '../../../../../api/services/gamesService/types';
 import type { AdminGamesPageStateType } from '../../GamesPageTypes';
@@ -21,53 +24,47 @@ const EditGameInfoModal: React.FC<PropsType> = props => {
     const BaseClassName = useRef('adminGamesPage__editGameInfoModal');
     const BaseInputClassName = useRef(`${BaseClassName.current}__formItem`);
 
-    const formSubmitHandler = useCallback(
-        (event: React.FormEvent<HTMLFormElement>) => {
-            event.preventDefault();
+    const FormInitialValues = useRef<EditEntryInfoQueryParamsType & { date?: string }>({
+        _id: EditableEntryData._id,
+        email: EditableEntryData.email,
+        date: EditableEntryData.date,
+        gameInfo: EditableEntryData.gameInfo,
+        comment: EditableEntryData.comment,
+    });
 
-            const SendFormData = Object.fromEntries(new FormData(event.target as HTMLFormElement)) as EditEntryInfoQueryParamsType['gameInfo'] & {
-                _id: EditEntryInfoQueryParamsType['_id'];
-                email: EditEntryInfoQueryParamsType['email'];
-                comment: EditEntryInfoQueryParamsType['comment'];
-            };
-
-            if (!SendFormData.title || !SendFormData.email || !SendFormData.archive || !SendFormData.screenshot) {
+    const FormInstance = useFormik({
+        initialValues: FormInitialValues.current,
+        onSubmit: values => {
+            if (!values.email || !values.gameInfo.title || !values.gameInfo.archive || !values.gameInfo.screenshot) {
                 alert('Не заполнены обязательные поля');
                 return;
             }
 
-            handleFormData({
-                _id: SendFormData._id,
-                email: SendFormData.email,
-                gameInfo: {
-                    title: SendFormData.title,
-                    genre: SendFormData.genre,
-                    description: SendFormData.description,
-                    tools: SendFormData.tools,
-                    archive: SendFormData.archive,
-                    screenshot: SendFormData.screenshot,
-                },
-                comment: SendFormData.comment,
-            });
+            delete values.date;
+
+            handleFormData(values);
 
             handleModalClose();
         },
-        [handleFormData]
-    );
+        onReset: () => {
+            handleModalClose();
+        },
+    });
 
     return (
         <>
-            <div className="modal__backdrop" onClick={handleModalClose} />
+            <div className="modal__backdrop" onClick={FormInstance.handleReset} />
             <div className={`modal__content ${BaseClassName.current}`}>
-                <form onSubmit={formSubmitHandler}>
+                <form onSubmit={FormInstance.handleSubmit} onReset={FormInstance.handleReset}>
                     <TextInput
                         required
                         className={BaseInputClassName.current}
-                        id="title"
+                        id="gameInfo.title"
                         label="Название игры"
-                        defaultValue={EditableEntryData.gameInfo.title}
-                        extraText="Максимум 100 символов"
-                        maxLength={100}
+                        value={FormInstance.values.gameInfo.title}
+                        onChange={FormInstance.handleChange}
+                        extraText={`Максимум ${CONSTS.ENTRY_GAME_TITLE_MAX_LENGTH} символов`}
+                        maxLength={CONSTS.ENTRY_GAME_TITLE_MAX_LENGTH}
                     />
 
                     <TextInput
@@ -76,9 +73,10 @@ const EditGameInfoModal: React.FC<PropsType> = props => {
                         id="email"
                         type="email"
                         label="Почта"
-                        defaultValue={EditableEntryData.email}
-                        extraText="Максимум 50 символов"
-                        maxLength={50}
+                        value={FormInstance.values.email}
+                        onChange={FormInstance.handleChange}
+                        extraText={`Максимум ${CONSTS.ENTRY_EMAIL_MAX_LENGTH} символов`}
+                        maxLength={CONSTS.ENTRY_EMAIL_MAX_LENGTH}
                     />
 
                     <TextInput
@@ -87,62 +85,67 @@ const EditGameInfoModal: React.FC<PropsType> = props => {
                         id="date"
                         type="text"
                         label="Дата отправки"
-                        defaultValue={EditableEntryData.date}
+                        value={FormInstance.values.date}
+                        onChange={FormInstance.handleChange}
                         extraText="Не редактируется, для информации"
-                        maxLength={50}
                     />
 
                     <TextInput
                         className={BaseInputClassName.current}
-                        id="genre"
+                        id="gameInfo.genre"
                         type="text"
                         label="Жанр"
-                        defaultValue={EditableEntryData.gameInfo.genre}
-                        extraText="Максимум 50 символов"
-                        maxLength={50}
+                        value={FormInstance.values.gameInfo.genre}
+                        onChange={FormInstance.handleChange}
+                        extraText={`Максимум ${CONSTS.ENTRY_GAME_GENRE_MAX_LENGTH} символов`}
+                        maxLength={CONSTS.ENTRY_GAME_GENRE_MAX_LENGTH}
                     />
 
                     <TextInput
                         className={BaseInputClassName.current}
-                        id="description"
+                        id="gameInfo.description"
                         type="textarea"
                         label="Описание игры"
-                        defaultValue={EditableEntryData.gameInfo.description}
-                        extraText="Максимум 200 символов, без переносов на новую строку"
-                        maxLength={200}
+                        value={FormInstance.values.gameInfo.description}
+                        onTextareaChange={FormInstance.handleChange}
+                        extraText={`Максимум ${CONSTS.ENTRY_GAME_DESCRIPTION_MAX_LENGTH} символов, без переносов на новую строку`}
+                        maxLength={CONSTS.ENTRY_GAME_DESCRIPTION_MAX_LENGTH}
                         inputStyle={{ height: 100 }}
                     />
 
                     <TextInput
                         className={BaseInputClassName.current}
-                        id="tools"
+                        id="gameInfo.tools"
                         type="textarea"
                         label="Инструменты"
-                        defaultValue={EditableEntryData.gameInfo.tools}
-                        extraText="Максимум 100 символов, без переносов на новую строку"
-                        maxLength={100}
+                        value={FormInstance.values.gameInfo.tools}
+                        onTextareaChange={FormInstance.handleChange}
+                        extraText={`Максимум ${CONSTS.ENTRY_GAME_TOOLS_MAX_LENGTH} символов, без переносов на новую строку`}
+                        maxLength={CONSTS.ENTRY_GAME_TOOLS_MAX_LENGTH}
                     />
 
                     <TextInput
                         required
                         className={BaseInputClassName.current}
-                        id="archive"
+                        id="gameInfo.archive"
                         type="url"
                         label="Архив с игрой"
-                        defaultValue={EditableEntryData.gameInfo.archive}
-                        extraText="Максимум 100 символов"
-                        maxLength={100}
+                        value={FormInstance.values.gameInfo.archive}
+                        onChange={FormInstance.handleChange}
+                        extraText={`Максимум ${CONSTS.ENTRY_GAME_ARCHIVE_LINK_MAX_LENGTH} символов`}
+                        maxLength={CONSTS.ENTRY_GAME_ARCHIVE_LINK_MAX_LENGTH}
                     />
 
                     <TextInput
                         required
                         className={BaseInputClassName.current}
-                        id="screenshot"
+                        id="gameInfo.screenshot"
                         type="url"
                         label="Скриншот/логотип игры"
-                        defaultValue={EditableEntryData.gameInfo.screenshot}
-                        extraText="Максимум 100 символов"
-                        maxLength={100}
+                        value={FormInstance.values.gameInfo.screenshot}
+                        onChange={FormInstance.handleChange}
+                        extraText={`Рекомендуется использовать Imgur или imgBB. Максимум ${CONSTS.ENTRY_GAME_SCREENSHOT_LINK_MAX_LENGTH} символов`}
+                        maxLength={CONSTS.ENTRY_GAME_SCREENSHOT_LINK_MAX_LENGTH}
                     />
 
                     <TextInput
@@ -150,22 +153,21 @@ const EditGameInfoModal: React.FC<PropsType> = props => {
                         id="comment"
                         type="textarea"
                         label="Комментарий для организатора"
-                        defaultValue={EditableEntryData.comment}
-                        extraText="Максимум 200 символов, без переносов на новую строку"
-                        maxLength={200}
+                        value={FormInstance.values.comment}
+                        onTextareaChange={FormInstance.handleChange}
+                        extraText={`Максимум ${CONSTS.ENTRY_COMMENT_MAX_LENGTH} символов, без переносов на новую строку`}
+                        maxLength={CONSTS.ENTRY_COMMENT_MAX_LENGTH}
                         inputStyle={{ height: 100 }}
                     />
 
-                    <TextInput id="_id" value={EditableEntryData._id} readOnly hidden required />
+                    <TextInput id="_id" value={FormInstance.values._id} readOnly hidden required />
 
                     <div className={`${BaseClassName.current}__button`}>
                         <button type="submit">Сохранить изменения</button>
                     </div>
 
                     <div className={`${BaseClassName.current}__button`}>
-                        <button type="reset" onClick={handleModalClose}>
-                            Закрыть без сохранения изменений
-                        </button>
+                        <button type="reset">Закрыть без сохранения изменений</button>
                     </div>
                 </form>
             </div>
