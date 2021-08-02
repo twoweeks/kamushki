@@ -211,7 +211,7 @@ const SendPage: React.FC<PropsType> = props => {
                     <ReCaptcha
                         size={EReCaptchaV2Size.Normal}
                         callback={async token => {
-                            await FormInstance.setFieldValue('captcha', typeof token === 'string' ? token : '');
+                            await FormInstance.setFieldValue('captcha', typeof token === 'string' ? token : '', false);
                         }}
                     />
                 </div>
