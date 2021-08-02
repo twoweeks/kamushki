@@ -210,8 +210,8 @@ const SendPage: React.FC<PropsType> = props => {
                 <div className={`${BaseClassName.current}__captchaInput`}>
                     <ReCaptcha
                         size={EReCaptchaV2Size.Normal}
-                        callback={token => {
-                            FormInstance.setFieldValue('captcha', typeof token === 'string' ? token : '');
+                        callback={async token => {
+                            await FormInstance.setFieldValue('captcha', typeof token === 'string' ? token : '');
                         }}
                     />
                 </div>
@@ -221,11 +221,7 @@ const SendPage: React.FC<PropsType> = props => {
                 <div className={`${BaseClassName.current}__submitButton`}>
                     <button
                         type="submit"
-                        disabled={
-                            FormInstance.values.captcha === '' ||
-                            !FormInstance.values.ready ||
-                            (FormInstance.values.ready && FormInstance.values.ready.includes('off'))
-                        }>
+                        disabled={FormInstance.values.captcha === '' || (FormInstance.values.ready && FormInstance.values.ready.includes('off'))}>
                         Отправить игру
                     </button>
                 </div>
