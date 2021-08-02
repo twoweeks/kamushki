@@ -38,7 +38,7 @@ const SendPageContainer: React.FC = () => {
     const getFormDataStorageItemValue = useCallback((field: keyof FormDataStorageItemType['gameInfo']) => {
         const StorageData: FormDataStorageItemType['gameInfo'] | null = JSON.parse(localStorage.getItem(FormDataStorageItemName.current) ?? 'null');
 
-        return StorageData ? StorageData[field] : '';
+        return StorageData ? StorageData[field] : void 0;
     }, []);
 
     return (
