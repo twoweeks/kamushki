@@ -8,7 +8,7 @@
 
 ## Описание
 
-Данный репозиторий является монорепозиторием. Для работы с ним используется [npm workspaces](https://docs.npmjs.com/cli/v7/using-npm/workspaces), доступные только с 7 версии npm.
+Данный репозиторий является монорепозиторием. Для работы с ним используется [npm workspaces](https://docs.npmjs.com/cli/v7/using-npm/workspaces), доступный только с 7 версии npm.
 
 Приложение написано на TypeScript.
 
