@@ -1,10 +1,10 @@
 {
-    "name": "@twoweeks/twg20-web-client",
+    "name": "@twoweeks/kamushki-client",
     "version": "1.0.0",
     "private": true,
     "repository": {
         "type": "git",
-        "url": "https://github.com/twoweeks/twg20-web.git",
+        "url": "https://github.com/twoweeks/kamushki.git",
         "directory": "packages/client"
     },
     "scripts": {

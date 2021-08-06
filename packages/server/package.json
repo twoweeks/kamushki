@@ -1,10 +1,10 @@
 {
-    "name": "@twoweeks/twg20-web-server",
+    "name": "@twoweeks/kamushki-server",
     "version": "1.0.0",
     "private": true,
     "repository": {
         "type": "git",
-        "url": "https://github.com/twoweeks/twg20-web.git",
+        "url": "https://github.com/twoweeks/kamushki.git",
         "directory": "packages/server"
     },
     "scripts": {

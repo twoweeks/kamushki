@@ -1,17 +1,16 @@
 {
-    "name": "@twoweeks/twg20-web",
+    "name": "@twoweeks/kamushki",
     "version": "1.0.0",
     "type": "module",
     "private": true,
     "author": "Dmitry <dmitry@cojam.ru> (https://e965.ru)",
     "license": "MIT",
-    "repository": "https://github.com/twoweeks/twg20-web.git",
+    "repository": "https://github.com/twoweeks/kamushki.git",
     "workspaces": [
         "packages/*"
     ],
     "scripts": {
-        "test": "jest",
-        "prettier": "prettier --write **/*.{json,yml,yaml,md,php,js,ts,tsx}",
+        "prettier": "prettier --write **/*.{json,yml,md,js,ts,tsx}",
         "lint-staged": "lint-staged",
         "prepare": "is-ci || husky install",
         "eslint": "eslint .",
@@ -24,7 +23,7 @@
         "assemble": "npm run build:all && npm run copy-client-files"
     },
     "lint-staged": {
-        "*.{json,yml,yaml,md,php,js,ts,tsx}": [
+        "*.{json,yml,md,js,ts,tsx}": [
             "prettier --write"
         ]
     },
