@@ -3,7 +3,7 @@
         "start": "node index.js"
     },
     "dependencies": {
-        "fastify-swagger": "4.8.3",
+        "fastify-swagger": "4.8.4",
         "saslprep": "1.0.3"
     }
 }
