@@ -32,7 +32,7 @@
 
 Сначала выполняется сборка клиента (`kamushki-client`), затем бекенда (`kamushki-server`). Файлы клиента копируются в `dist`-директорию бэкенда.
 
-Деплой осуществляется через Github Pages. Для работы необходимо указать в репозитории секреты `FTP_HOSTNAME`, `FTP_USERNAME` и `FTP_PASSWORD`. Также, необходимо в секретах прописать клиентский ключ от reCAPTCHA v2 (переменная `RECAPTCHA_V2_CLIENT_KEY`).
+Деплой осуществляется через GitHub Actions. Для работы необходимо указать в репозитории секреты `FTP_HOSTNAME`, `FTP_USERNAME` и `FTP_PASSWORD`. Также, необходимо в секретах прописать клиентский ключ от reCAPTCHA v2 (переменная `RECAPTCHA_V2_CLIENT_KEY`).
 
 -   Workflow находится здесь: `.github/workflows/build-and-deploy.yml`
 
