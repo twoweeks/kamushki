@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { useFormik } from 'formik';
 
-import * as CONSTS from '@twoweeks/twg20-web-server/src/consts';
+import * as CONSTS from '@twoweeks/kamushki-server/src/consts';
 
 import type { EditEntryInfoQueryParamsType } from '../../../../../api/services/gamesService/types';
 import type { AdminGamesPageStateType } from '../../GamesPageTypes';

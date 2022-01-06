@@ -1,7 +1,7 @@
 import React, { useState, useRef, useCallback } from 'react';
 import { ReCaptchaV2 as ReCaptcha, EReCaptchaV2Size } from 'react-recaptcha-x';
 
-import * as CONSTS from '@twoweeks/twg20-web-server/src/consts';
+import * as CONSTS from '@twoweeks/kamushki-server/src/consts';
 
 import CONFIG from '../../../config';
 

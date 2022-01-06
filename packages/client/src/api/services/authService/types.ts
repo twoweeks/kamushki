@@ -1,1 +1,1 @@
-export type { LoginQueryParamsType } from '@twoweeks/twg20-web-server/src/types';
+export type { LoginQueryParamsType } from '@twoweeks/kamushki-server/src/types';

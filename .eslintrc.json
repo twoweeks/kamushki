@@ -9,7 +9,7 @@
     "parserOptions": {
         "sourceType": "module"
     },
-    "ignorePatterns": ["packages/**/lib/*.**"],
+    "ignorePatterns": ["packages/**/dist/**/*.**"],
     "rules": {
         "@typescript-eslint/naming-convention": ["off"]
     }
